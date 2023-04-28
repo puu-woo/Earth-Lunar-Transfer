@@ -32,7 +32,7 @@ datetimeArray_jul               =   juliandate ( datetimeArray+seconds(TOF) )';
 
 
 % %change it into lla form
-[lunar_RA,lunar_lat,~]          =   j2000ToRaanLat ( r_Mrel );
+[lunar_RA,lunar_argper,~]          =   j2000ToRaanLat ( r_Mrel );
 
 
 % longitude considering the rotation of the Earth
@@ -55,7 +55,7 @@ for i = 1:length(lunar_RA)
 
     if abs ( reverse_lunarRA  - ra_j2000_adj ( i ) ) < tol
             launch_dateUTC(dateNum)         =   datetimeArray ( i );
-            launch_lat(dateNum)             =   -lunar_lat ( i );
+            launch_lat(dateNum)             =   -lunar_argper ( i );
             launch_RA(dateNum)             =   ra_j2000_adj ( i );
             lunar_posAtarrival(dateNum,:)   =   r_Mrel ( i,: );
             lunar_velAtarrival(dateNum,:)   =   v_Mrel ( i,: );

@@ -33,7 +33,7 @@ while (true)
  
 
     % Launch Window
-    [launch_lon,launch_lat,lunar_posAtarrival,lunar_velAtarrival,launch_dateUTC]  =  launchwindow ( lon_songdo , searchStartdate , TOF );
+    [launch_raan,launch_argper,lunar_posAtarrival,lunar_velAtarrival,launch_dateUTC]  =  launchwindow ( lon_songdo , searchStartdate , TOF );
     Newlunar_distance                                          =  sqrt ( sum ( lunar_posAtarrival ( 1 , : ) .^ 2 ) );
 
 
@@ -48,8 +48,9 @@ end
 
 
 % PQ frame to ECI frame
-raan                    =   launch_lon ( 1 ) ;
-argper                  =   launch_lat ( 1 ) ;
+raan                    =   launch_raan ( 1 ) ;
+argper                  =   launch_argper ( 1 ) ;
+
 initial_position        =   pq2j2000 ( EarthRadius + EarthOrbitaltitude , 0 , raan , inc , argper );
 initial_velocity        =   pq2j2000 ( 0 , sqrt ( mu_earth / ( EarthRadius + EarthOrbitaltitude ) ) , raan , inc , argper );
 delv_j2000(1,:)         =   pq2j2000 ( 0 , delv ( 1 ) , raan , inc , argper );
@@ -64,7 +65,7 @@ out                     =   sim ( "twobody.slx" );
 time                    =   out.posj2000.Time;
 posj2000                =   out.posj2000.Data;
 velj2000                =   out.velj2000.Data;
-posME                   =   out.posMj2000.Data;
+posME                   =   out.posME.Data;
 
 
 viewer;
