@@ -1,4 +1,4 @@
-function [launch_lon,launch_lat,lunar_posAtarrival,lunar_velAtarrival,launch_dateUTC] = launchwindow(lon,algorithm_dateUTC,TOF)
+function [launch_RA,launch_lat,lunar_posAtarrival,lunar_velAtarrival,launch_dateUTC] = launchwindow(lon,algorithm_dateUTC,TOF)
 %% Revision history
 %   - 2023/04/08, by 은별
 %   - 2023/04/10, by 동민
@@ -28,34 +28,35 @@ datetimeArray_jul               =   juliandate ( datetimeArray+seconds(TOF) )';
 
 
 % % Relative position of Moon to Earth
-[r_Mrel,v_Mrel]                          =   planetEphemeris ( datetimeArray_jul , 'Earth' , 'Moon' );
+[r_Mrel,v_Mrel]                 =   planetEphemeris ( datetimeArray_jul , 'Earth' , 'Moon' );
 
 
 % %change it into lla form
-[lunar_lon,lunar_lat,~]         =   j2000ToRaanLat ( r_Mrel );
+[lunar_RA,lunar_lat,~]          =   j2000ToRaanLat ( r_Mrel );
 
 
 % longitude considering the rotation of the Earth
 % GMST
+% 발사장 위도에 세차 운동이 고려되지 않음
 gmst_degree                     =   siderealTime ( algorithm_date_jul );    % greenwich RA
-lon_Erot                        =   gmst_degree + lon  + 360 / 24 / 60 * ( 0 : length ( lunar_lon ) - 1 );
-lon_Erot_adj                    =   adjust_lon ( lon_Erot )' * pi / 180;    % convert into radian
+ra_j2000                        =   gmst_degree + lon  + 360 / 24 / 60 * ( 0 : length ( lunar_RA ) - 1 );
+ra_j2000_adj                    =   adjust_lon ( ra_j2000 )' * pi / 180;    % convert into radian
 
 
 % Compare to given longitude
 % tolerance in 0.1 degree.
 dateNum                         =   1;
 tol                             =   0.1 * pi / 180;
-for i = 1:length(lunar_lon)
-    ref                         =   pi + lunar_lon ( i );
-    if ref > 2*pi
-        ref                     =   ref - 2 * pi;
+for i = 1:length(lunar_RA)
+    reverse_lunarRA             =   pi + lunar_RA ( i );
+    if reverse_lunarRA > 2*pi
+        reverse_lunarRA         =   reverse_lunarRA - 2 * pi;
     end
 
-    if abs ( ref  - lon_Erot_adj ( i ) ) < tol
+    if abs ( reverse_lunarRA  - ra_j2000_adj ( i ) ) < tol
             launch_dateUTC(dateNum)         =   datetimeArray ( i );
             launch_lat(dateNum)             =   -lunar_lat ( i );
-            launch_lon(dateNum)             =   lon_Erot_adj ( i );
+            launch_RA(dateNum)             =   ra_j2000_adj ( i );
             lunar_posAtarrival(dateNum,:)   =   r_Mrel ( i,: );
             lunar_velAtarrival(dateNum,:)   =   v_Mrel ( i,: );
             dateNum                         =   dateNum + 1;
