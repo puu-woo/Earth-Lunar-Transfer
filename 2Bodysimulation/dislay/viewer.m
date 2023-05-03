@@ -33,9 +33,9 @@ p_lunar2 = surf( X_M2 , Y_M2 , Z_M2 , 'FaceColor' , [1,0.7,0] , 'EdgeColor' , [ 
 hold off
 title('Lunar Centered View Case 2 (unit : km)')
 legend([p_sat2,p_lunar2],'trajectory','Lunar','Location','best');
-xlim([-2,2]*10^3);
-ylim([-2,2]*10^3);
-zlim([-2,2]*10^3);
+% xlim([-2,2]*10^3);
+% ylim([-2,2]*10^3);
+% zlim([-2,2]*10^3);
 xlabel('x');
 ylabel('y');
 zlabel('z');

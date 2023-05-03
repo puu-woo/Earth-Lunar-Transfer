@@ -11,5 +11,5 @@ disp(['Delta v1        : ',num2str(delv(1)),' km/s'])
 disp(['Delta v2        : ',num2str(delv(2)),' km/s'])
 disp(['Delta v3        : ',num2str(delv(3)),' km/s'])
 
-disp(['Start Longitude : ',num2str(launch_lon(1)*180/pi),' degree'])
-disp(['Start Latitude  : ',num2str(launch_lat(1)*180/pi),' degree'])
+disp(['Start Longitude : ',num2str(launch_raan(1)*180/pi),' degree'])
+disp(['Start Latitude  : ',num2str(launch_argper(1)*180/pi),' degree'])
