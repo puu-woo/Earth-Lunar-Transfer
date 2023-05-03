@@ -3,7 +3,7 @@ function [delv,v0_,v1_,v2_,inc_trans] = findDelvTOF_lunarRot(EarthOrbitaltitude,
 %
 
 
-lunarAxisInc        =       ( 90 - 6.68 ) * pi / 180;               % lunar axis inclination to the lunar's orbit around the earth : 실제값으로 수정 필요
+lunarAxisInc        =       ( 90 - 6.68 ) * pi / 180;               % lunar axis inclination to the lunar's orbit around the earth
 r0                  =       EarthRadius + EarthOrbitaltitude;
 r_mission           =       LunarRadius + missionAltitude;
 
@@ -18,8 +18,8 @@ inc_trans           =       asin(injectionRadius * sin(lunarAxisInc) / r_lunarIn
 
 
 
-a_trans             =       (r0 + r_lunarInjec) / 2;
-a_injec             =       (injectionRadius + r_mission) / 2;
+a_trans             =   (r0 + r_lunarInjec) / 2;
+a_injec             =   (injectionRadius + r_mission) / 2;
 
 v0                  =   sqrt ( mu_earth / r0 );
 v0_                 =   sqrt ( mu_earth * ( 2 / r0 - 1 / a_trans ) );
