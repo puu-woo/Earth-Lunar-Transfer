@@ -1,7 +1,7 @@
 function y = MorbitRK4(stopstep,dt,y0,lunar_pos)
     mu_lunar                    =   4911.3;
     y(:,1) = y0;
-    for i = 2:stopstep
+    for i = 2:stopstep+1
         r1 = y(1:3,i-1)-lunar_pos(:,i-1);
         v1 = y(4:6,i-1);
         a1 = - mu_lunar / sum ( r1.^2 )^(1.5) * r1;

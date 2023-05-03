@@ -1,4 +1,5 @@
 clear
+format long
 % Constants
 R_earth         =   6378;
 R_lunar         =   1743;
@@ -24,11 +25,10 @@ T_trans     =   pi * sqrt( a_trans ^3 / mu_earth );
 
 % Phase 2
 a_inj       =   0.5 * ( lunar_SOI + Rmission );
-T_inj        =   0.60432*pi * sqrt( a_inj ^3 / mu_lunar );
-
+T_ref        =   1.5*pi * sqrt( a_inj ^3 / mu_lunar );
 
 K1 = fix(T_trans/5);
-K2 = fix(T_inj/5);
+K2 = fix(T_ref/5);
 K = K1+K2;
 lunar_pos(K1,:) = [lunar_distance,0,0];
 lunar_vel(K1,:) = cross(lunar_w,lunar_pos(K1,:));
@@ -46,37 +46,51 @@ end
 
 
 v2          =   [ 0 , sqrt( mu_earth * ( 2 / (lunar_distance - lunar_SOI ) - 1 / a_trans ) ) , 0];
-% v2n         =   [ 0 , -sqrt( mu_lunar * ( 2 / lunar_SOI - 1 / a_inj ) ) , 0]+lunar_vel(K1,:);
-% dv1         =   v2n - v2;
-dv1 = [0,0.75,0];
 orb_trans   =   EorbitRK4 ( K1 , 5 , [ r0_trans , v0_trans ] );
-orb_inj = MorbitRK4(K2,5,[lunar_distance-lunar_SOI;0;0;(v2+dv1)'],lunar_pos(K1:end,:)');
-orb = [orb_trans,orb_inj];
-delv = [v0_trans-v0 ; dv1];
 
-% % Phase 3
-% rm0 = orb_inj(1:3,end)-lunar_pos(end,:)';
-% angle = atan2(rm0(2), rm0(1));
-% 
-% TOF2 = 150000;
-% for i = K2+1:K2+TOF2/5
-%     lunar_pos(i,:) = lunar_pos(i-1,:)+lunar_vel(i-1,:)*5;
-%     lunar_vel(i,:) = -cross(lunar_pos(i-1,:),lunar_w);
-% end
-% 
-% v0n = sqrt(mu_lunar/norm(rm0));
-% v0nx = -v0n*sin(angle)+lunar_vel(K2,1);
-% v0ny = v0n*cos(angle)+lunar_vel(K2,2);
+dv1 = [0,0.73014001,0];
+addv = [0,0.0001,0];
+tor = 10^-5;
+while true
+    orb_inj = MorbitRK4(K2,5,[lunar_distance-lunar_SOI;0;0;(v2+dv1)'],lunar_pos(K1:end,:)');
+    
+    r_mci = orb_inj(1:3,:)-lunar_pos(K1:end,:)';
+    for i = 1:K2
+        d_mci(i) = norm(r_mci(:,i));
+    end
 
-% orb_mission = MorbitRK4(TOF2,5,[orb_inj(1:3,end);v0nx;v0ny;0],lunar_pos(K2:end,:)');
+    [d_min,index] = min(d_mci);
+    tar = d_min-R_lunar-100;
+    if tar > tor
+        disp(d_min);
+        dv1 = dv1 + addv;
+    elseif tar < -tor
+        dv1 = dv1 - addv;
+        addv = addv/10;
+    else
+        break
+    end
+end
+
+T_inj_real = (index-1)*5;
 
 
+% Phase 3
 
-% Earth
-theta = linspace(0,2*pi,1000);
-E_x = R_earth*cos(theta);
-E_y = R_earth*sin(theta);
-L_x = R_lunar*cos(theta)+lunar_distance;
-L_y = R_lunar*sin(theta);
-L_SOI_x = lunar_SOI*cos(theta)+lunar_distance;
-L_SOI_y = lunar_SOI*sin(theta);
+r_arr = r_mci(:,index);
+v_arr = orb_inj(4:6,index)-lunar_vel(K1+(index-1),:)';
+
+v_need = sqrt(mu_lunar/(R_lunar+Rmission));
+angle = atan2(r_arr(2),r_arr(1));
+
+vx_need = -v_need*sin(angle)+lunar_vel(K1+index-1,1);
+vy_need = v_need*cos(angle)+lunar_vel(K1+index-1,2);
+
+dv2 = [vx_need-v_arr(1),vy_need-v_arr(2),0];
+orb_mission = MorbitRK4(K2-index+1,5,[orb_inj(1:3,index);vx_need;vy_need;0]',lunar_pos(K1+index-1:end,:)');
+
+orb = [orb_trans,orb_inj(:,2:index-1),orb_mission];
+delv = [v0_trans-v0 ; dv1 ; dv2];
+
+
+viewer;
