@@ -18,7 +18,7 @@ end
 
 
 % Figure
-fg = figure("Color",[0.15,0.15,0.15]);
+fg          = figure("Color",[0.15,0.15,0.15]);
 fg.Position = [500,200,960,720];
 subplot(2,2,2);
 plot(relative_position(1,:),relative_position(2,:),'Color','White')
