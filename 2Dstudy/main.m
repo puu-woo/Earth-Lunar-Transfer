@@ -1,7 +1,6 @@
 clear
 format long
 
-
 % Constants
 R_earth         =   6378;
 R_lunar         =   1743;
