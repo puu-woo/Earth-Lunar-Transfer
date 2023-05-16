@@ -49,7 +49,7 @@ while (true)
 %  
 
     % Launch Window
-    [launch_lon,launch_lat,lunar_posAtarrival,lunar_velAtarrival,launch_dateUTC]  =  launchwindow ( lon_songdo , searchStartdate , TOF );
+    [launch_lon,launch_lat,lunar_posAtarrival,lunar_velAtarrival,launch_dateUTC]  =  launchwindow ( lon_songdo , searchStartdate , TOF, inc_trans );
     Newlunar_distance                                          =  sqrt ( sum ( lunar_posAtarrival ( 1 , : ) .^ 2 ) );
 
 

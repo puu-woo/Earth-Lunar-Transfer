@@ -3,7 +3,7 @@
 %   - 2023/04/24, by 동민
 %=========================================================================
 format long
-addpath('.\transformation\','.\utillity\','dislay\')
+addpath('.\transformation\','.\utillity\','.\dislay\')
 clear
 
 % Constant
