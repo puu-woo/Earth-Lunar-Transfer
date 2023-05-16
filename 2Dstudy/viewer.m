@@ -1,5 +1,5 @@
 % Lunar SOI
-theta = linspace(0,2*pi,1000);
+theta = linspace(0,2*pi,100);
 x_soi = lunar_SOI*cos(theta)+lunar_posATinj(1);
 y_soi = lunar_SOI*sin(theta)+lunar_posATinj(2);
 
@@ -48,19 +48,26 @@ grid on
 xlim([-1,5]*10^5);
 ylim([-4,4]*10^5);
 
-shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceColor','r','MaximumNumPoints',100);
-moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',10);
-for k = 1:100:length(y_loi)-99
-    xvec = y_loi(1,k:k+99);
-    yvec = y_loi(2,k:k+99);
-    zvec = y_loi(3,k:k+99);
+shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceColor','r','MaximumNumPoints',1);
+moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1);
+soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100);
 
-    lunarx = lunar_position(1,k:k+99);
-    lunary = lunar_position(2,k:k+99);
-    lunarz = lunar_position(3,k:k+99);
+for k = 1:100:length(y_loi)-99
+    xvec = y_loi(1,k);
+    yvec = y_loi(2,k);
+    zvec = y_loi(3,k);
+
+    lunarx = lunar_position(1,k);
+    lunary = lunar_position(2,k);
+    lunarz = lunar_position(3,k);
+
+    soix = lunar_SOI*cos(theta)+lunar_position(1,k);
+    soiy = lunar_SOI*sin(theta)+lunar_position(2,k);
+    soiz = 0*sin(theta)+lunar_position(3,k);
 
     addpoints(shipWriter,xvec,yvec,zvec)
     addpoints(moon_writer,lunarx,lunary,lunarz)
+    addpoints(soi_writer,soix,soiy,soiz)
     drawnow
 end
 

@@ -26,15 +26,15 @@ Rmission        =   100;
 
 
 % Earth-Lunar Transfer Orbit
-v_init              =   [ 0 , -10.7 , 0 ];
+v_init              =   [ 0 , -10.6 , 0 ];
 [y_trans,T_trans]   =   TransOrb( r0 , v_init , lunar_posATinj , lunar_SOI , dt );
 
 
 % Lunar Orbit Injection
 theta       =   getAngleFromPoint( lunar_posATinj , y_trans ( 1:3 , end )' );
-v           =   0;
+v           =   [0,1,0];
 v_init2     =   [ v * cos( theta + 0.5*pi ) , v * sin(theta+0.5*pi) , 0 ];
-[y_loi,T_inj,lunar_position,lunar_velocity] = LOIOrb(y_trans(1:3,end)',v_init2,lunar_posATinj,dt);
+[y_loi,T_inj,lunar_position,lunar_velocity] = LOIOrb(y_trans(1:3,end)',v,lunar_posATinj,dt);
 
 
 % Orbit Summation
