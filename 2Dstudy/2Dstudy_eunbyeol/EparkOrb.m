@@ -1,11 +1,16 @@
-function [r,v] = EparkOrb(mu_earth,h)
+function [r,v] = EparkOrb(mu_earth,h,theta)
 
 r = [-h,0,0];
 v = [0,-sqrt( mu_earth / h),0];
 
 
 % rotate theta by W axis(PQW)
-r = rotation_theta(r);
-v = rotation_theta(v);
+
+DCM = [ cos(theta)     sin(theta)     0;
+        -sin(theta)    cos(theta)     0;
+        0               0             0];
+
+r  =   r * DCM;
+v  =   v * DCM;
 
 end
