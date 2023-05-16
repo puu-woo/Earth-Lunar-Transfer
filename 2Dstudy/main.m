@@ -20,9 +20,12 @@ altitude        =   500;
 lunar_SOI       =   66000;
 Rmission        =   100;
 
+% r0 rotation
+theta           =   -10 * pi / 180;
+
 
 % Earth Parking Orbit
-[r0,v0]         = EparkOrb ( mu_earth , altitude + R_earth );
+[r0,v0]         = EparkOrb ( mu_earth , altitude + R_earth , theta );
 
 
 % Earth-Lunar Transfer Orbit
