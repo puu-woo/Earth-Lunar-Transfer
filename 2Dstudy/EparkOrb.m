@@ -7,9 +7,9 @@ v = [0,-sqrt( mu_earth / h),0];
 
 DCM = [ cos(theta)     sin(theta)     0;
         -sin(theta)    cos(theta)     0;
-        0               0             0];
+        0               0             1];
 
-r  =   r * DCM;
-v  =   v * DCM;
+r  =   (DCM * r')';
+v  =   (DCM * v')';
 
 end
