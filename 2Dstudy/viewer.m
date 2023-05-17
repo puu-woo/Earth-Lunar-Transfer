@@ -50,7 +50,7 @@ shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceCo
 moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1);
 soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100);
 
-speed = 300;
+speed = 100;
 for k = 1:speed:length(y_loi)-(speed-1)
     xvec = y_loi(1,k);
     yvec = y_loi(2,k);
