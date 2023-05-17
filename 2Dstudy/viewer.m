@@ -10,10 +10,8 @@ xl_mission = (Rmission+R_lunar)*cos(theta);
 yl_mission = (Rmission+R_lunar)*sin(theta);
 
 % Relative
-for i = 1:length(lunar_position)
-    relative_position(:,i) = y_loi(1:3,i)-lunar_position(:,i);
-    relative_velocity(:,i) = y_loi(4:6,i)-lunar_velocity(:,i);
-end
+relative_position = y_loi(1:3,:)-lunar_position;
+relative_velocity = y_loi(4:6,:)-lunar_velocity;
 
 
 
@@ -52,7 +50,8 @@ shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceCo
 moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1);
 soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100);
 
-for k = 1:100:length(y_loi)-99
+speed = 300;
+for k = 1:speed:length(y_loi)-99
     xvec = y_loi(1,k);
     yvec = y_loi(2,k);
     zvec = y_loi(3,k);
