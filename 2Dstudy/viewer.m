@@ -51,7 +51,7 @@ moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'Marke
 soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100);
 
 speed = 300;
-for k = 1:speed:length(y_loi)-99
+for k = 1:speed:length(y_loi)-(speed-1)
     xvec = y_loi(1,k);
     yvec = y_loi(2,k);
     zvec = y_loi(3,k);

@@ -61,7 +61,7 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
             y = y(:,1:end-1);
             lunar_position = lunar_position(:,1:end-1);
             lunar_velocity = lunar_velocity(:,1:end-1);
-            T = (i-2)*5;
+            T = (i-2)*dt;
             break;
         end
         i = i+1;

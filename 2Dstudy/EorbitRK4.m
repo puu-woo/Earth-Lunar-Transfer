@@ -43,7 +43,7 @@ function [y,min_distance,T] = EorbitRK4(dt,y0,lunar_posATinj,lunar_SOI)
     
             if distance > pre_distance
                 y = y(:,1:end-1);
-                T = (i-2)*5;
+                T = (i-2)*dt;
                 break;
             end
 
