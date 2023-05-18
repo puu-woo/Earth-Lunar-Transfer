@@ -21,7 +21,7 @@ lunar_SOI       =   66000;
 Rmission        =   100;
 
 % r0 rotation
-theta           =   15 * pi / 180;
+theta           =   12 * pi / 180;
 
 
 % Earth Parking Orbit
@@ -43,4 +43,4 @@ v_init              =   [ 0 , -10.6 , 0 ];
 % Orbit Summation
 y           =   [y_trans , y_loi];
 
-% viewer;
+viewer;
