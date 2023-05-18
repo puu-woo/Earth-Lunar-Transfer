@@ -2,20 +2,29 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
     mu_lunar        =   4911.3;
     mu_earth        =   398600;
     lunar_w         =   [0,0,2*pi / (27*24*3600)];
-    y(:,1) = y0;
+    
     i = 2;
     distance = norm(lunar_posATinj);
     min_distance = distance;
     lunar_position(:,1) = lunar_posATinj;
     lunar_velocity(:,1) = cross(lunar_w,lunar_posATinj')';
+
+
+    y = zeros(6,100000);
+    y(:,1) = y0;
+    lp = lunar_position(:,1);
+    r1e = y(1:3,1);
+    r1l = r1e-lp;
+    v1 = y(4:6,1);
+
     while true
         
-        lp = lunar_position(:,i-1);
+        % lp = lunar_position(:,i-1);
 
         % 1'st Order
-        r1e = y(1:3,i-1);
-        r1l = r1e-lp;
-        v1 = y(4:6,i-1);
+        % r1e = y(1:3,i-1);
+        % r1l = r1e-lp;
+        % v1 = y(4:6,i-1);
         a1 = - mu_lunar / sqrt( r1l' * r1l ) ^ 3 * r1l - mu_earth / sqrt( r1e' * r1e ) ^ 3 * r1e;
         % k1 = dt*[v1;a1];
         
@@ -40,21 +49,28 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
         a4 = - mu_lunar / sqrt( r4l' * r4l )^3* r4l  - mu_earth / sqrt( r4e' * r4e )^3 * r4e;
         % k4 = dt*[v4;a4];
 
+
+        % Lunar Update
+        lp = lp + lunar_velocity(:,i-1)*dt';
+        lunar_position(:,i) = lp;
+        lunar_velocity(:,i) = cross(lunar_w,lp)';
+
         % Sum Orders
-        kk = 2*r2e + 4*r3e + (2*v3 + v4)*dt;
-        y(:,i) = [kk ; 2*v2 + 4*v3 + (2*a3 + a4)*dt]/6;
+        
+        % 1'st Order Update
+        r1e = (2*r2e + 4*r3e + (2*v3 + v4)*dt)/6;
+        r1l = r1e - lp;
+        v1 = (2*v2 + 4*v3 + (2*a3 + a4)*dt)/6;
+        y(:,i) = [r1e;v1];
+        % y(:,i) = [kk ; 2*v2 + 4*v3 + (2*a3 + a4)*dt]/6;
         % y(:,i) = y(:,i-1) + [v1+2*v2+2*v3+v4;a1+2*a2+2*a3+a4]*dt/6;
         % y(:,i) = y(:,i-1) + (k1+2*k2+2*k3+k4)/6;
         %End RK4
 
-        % Lunar
-        lunar_position(:,i) = lp + lunar_velocity(:,i-1)*dt';
-        lunar_velocity(:,i) = cross(lunar_w,lp)';
-
         % Minimize distance algorithm
         pre_distance = distance;
 
-        vectorfromLunar = lunar_posATinj-kk/6;
+        vectorfromLunar = lunar_posATinj-r1e;
         % vectorfromLunar = lunar_position(:,i)-y(1:3,i);
         distance = sqrt(vectorfromLunar' * vectorfromLunar);
         
@@ -64,9 +80,9 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
 
 %         if distance > 100
         if i > 24*3600*0.5
-            y = y(:,1:end-1);
-            lunar_position = lunar_position(:,1:end-1);
-            lunar_velocity = lunar_velocity(:,1:end-1);
+            y = y(:,1:i-1);
+            lunar_position = lunar_position(:,1:i-1);
+            lunar_velocity = lunar_velocity(:,1:i-1);
             T = (i-2)*dt;
             break;
         end

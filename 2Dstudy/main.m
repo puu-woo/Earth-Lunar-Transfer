@@ -2,7 +2,7 @@ clear
 
 format long
 % Constants
-tic
+
 R_earth         =   6378;
 R_lunar         =   1743;
 mu_earth        =   398600;
@@ -42,5 +42,5 @@ v_init              =   [ 0 , -10.6 , 0 ];
 
 % Orbit Summation
 y           =   [y_trans , y_loi];
-toc
-viewer;
+
+% viewer;
