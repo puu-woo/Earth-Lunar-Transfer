@@ -33,23 +33,24 @@ relative_earthPosition = -lunar_position2;
 
 % Figure
 fg          = figure("Color",[0.15,0.15,0.15]);
-fg.Position = [500,70,960,720];
+fg.Position = [450,70,1080,820];
 
 % Sub Plot 2
 subplot(2,2,2);
-plot(relative_position(1,:),relative_position(2,:),'Color','White')
+p1 = plot(relative_position(1,:),relative_position(2,:),'Color','White');
 hold on
-plot(relative_earthPosition(1,:),relative_earthPosition(2,:),'Color','g')
-plot(xl_mission,yl_mission,'--')
-plot(0,0,'Marker','o')
-
+p2 = plot(xl_mission,yl_mission,'--','Color','w');
+p3 = plot(relative_earthPosition(1,:),relative_earthPosition(2,:),'Color','g');
+plot(0,0,'Marker','o','Color','y')
+plot(lunar_SOI*cos(theta),lunar_SOI*sin(theta),'--','Color','w')
+hold off
+legend([p1,p2,p3],'Trajectory','Lunar SOI','Earth Orb','Color',[0.2,0.2,0.2],'TextColor','w')
 % xlim([-2,2]*10^4);
 % ylim([-2,2]*10^4);
 xlabel('km');
 ylabel('km');
-title('Lunar Center',Color='white');
+title(['Lunar Center','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
-hold off
 grid on
 
 % Sub Plot3
@@ -58,37 +59,56 @@ ts = 0:dt:(length(y)-1)*(dt);
 subplot(2,2,3)
 plot(ts/86400,dn,'Color','w');
 yline(R_lunar+Rmission,'--','Color','w','Label','Mission Orb');
-xlabel('day');ylabel('km');ylim([-10000,max(dn)]);
-title('Distance From Lunar',Color='w');
+xlabel('TOF (day)');ylabel('km');ylim([-10000,max(dn)]);
+title(['Distance From Lunar','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='w');
 grid on
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
+
+% Sub Plot 4
+subplot(2,2,4);
+p11 = plot(relative_position(1,:),relative_position(2,:),'Color','White');
+hold on
+p22 = plot(xl_mission,yl_mission,'--','Color','w');
+p33 = plot(0,0,'Marker','o','Color','y');
+plot(lunar_SOI*cos(theta),lunar_SOI*sin(theta),'--','Color','w')
+hold off
+legend([p11,p22,p33],'Trajectory','Mission Orb','Moon','Color',[0.2,0.2,0.2],'TextColor','w')
+xlim([-1,1]*10^4);
+ylim([-1,1]*10^4);
+xlabel('km');
+ylabel('km');
+title(['Lunar Center, Near Lunar','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
+set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
+grid on
+
 
 % Sub Plot 1
 subplot(2,2,1);
-plot(y(1,:),y(2,:),'Color','White')
+p_y = plot(y(1,:),y(2,:),'Color','White');
 hold on
 plot(0,0,'Marker','o','Color','g')
-plot(lunar_position2(1,:),lunar_position2(2,:))
+p_l = plot(lunar_position2(1,:),lunar_position2(2,:));
 plot(lunar_posATinj(1),lunar_posATinj(2),'Marker','O','Color','Y')
-plot(x_soi,y_soi,'--','Color','w')
+p_soi = plot(x_soi,y_soi,'--','Color','w');
 plot(xe_mission,ye_mission,'--','Color','w')
 delv1 = quiver3(y_trans(1,1),y_trans(2,1),y_trans(3,1),(y_trans(4,1)-v0(1)),(y_trans(5,1)-v0(2)),(y_trans(6,1)-v0(3)),2e4,'Color',[1,0.4,0.4]);
 delv2 = quiver3(y_loi(1,1),y_loi(2,1),y_loi(3,1),(y_loi(4,1)-y_trans(4,end)),(y_loi(5,1)-y_trans(5,end)),(y_loi(6,1)-y_trans(6,end)),2e4','Color',[1,0.5,0.5]);
-text(x_soi(1),y_soi(1),{' Lunar',' SOI'},'color','White')
+% text(x_soi(1),y_soi(1),{' Lunar',' SOI'},'color','White')
 text (0,-150000,{'\rightarrow : del v'},'color',[1,0.5,0.5])
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
+legend([p_y,p_l,p_soi],'Trajectory','Lunar Orb','Lunar SOI','Color',[0.2,0.2,0.2],'TextColor','w')
 grid on
 
 
-title('Earth Center',Color='white');
-xlim([-1,5]*10^5);xlabel('km');
-ylim([-4,4]*10^5);ylabel('km');
+title(['Earth Center','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
+xlim([-1,6]*10^5);xlabel('km');
+ylim([-4,5]*10^5);ylabel('km');
 
-shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceColor','r','MaximumNumPoints',1);
-moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1);
-soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100);
+shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceColor','r','MaximumNumPoints',1,'HandleVisibility','off');
+moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1,'HandleVisibility','off');
+soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100,'HandleVisibility','off');
 
-speed = 100;
+speed = 300;
 for k = 1:speed:length(y)-(speed-1)
     xvec = y(1,k);
     yvec = y(2,k);
