@@ -23,12 +23,13 @@ end
 
 % All lunar position
 lunar_position2 = [lunar_position(:,1:end-1),lunar_position_inj];
-lunar_velocity2 = [lunar_velocity(:,1:end-1),lunar_velocity_inj];
+% lunar_velocity2 = [lunar_velocity(:,1:end-1),lunar_velocity_inj];
 
 
 % Relative
 relative_position = y(1:3,:)-lunar_position2;
-relative_velocity = y(4:6,:)-lunar_velocity2;
+% relative_velocity = y(4:6,:)-lunar_velocity2;
+relative_earthPosition = -lunar_position2;
 
 % Figure
 fg          = figure("Color",[0.15,0.15,0.15]);
@@ -38,10 +39,14 @@ fg.Position = [500,70,960,720];
 subplot(2,2,2);
 plot(relative_position(1,:),relative_position(2,:),'Color','White')
 hold on
+plot(relative_earthPosition(1,:),relative_earthPosition(2,:),'Color','g')
 plot(xl_mission,yl_mission,'--')
 plot(0,0,'Marker','o')
-xlim([-2,2]*10^4);xlabel('km');
-ylim([-2,2]*10^4);ylabel('km');
+
+% xlim([-2,2]*10^4);
+% ylim([-2,2]*10^4);
+xlabel('km');
+ylabel('km');
 title('Lunar Center',Color='white');
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 hold off

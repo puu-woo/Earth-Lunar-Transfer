@@ -21,7 +21,7 @@ lunar_SOI       =   66000;
 Rmission        =   100;
 
 % r0 rotation
-theta           =   12 * pi / 180;
+theta           =   10 * pi / 180;
 
 
 % Earth Parking Orbit
