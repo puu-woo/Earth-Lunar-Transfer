@@ -108,7 +108,7 @@ shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceCo
 moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1,'HandleVisibility','off');
 soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100,'HandleVisibility','off');
 
-speed = 300;
+speed = 1000;
 for k = 1:speed:length(y)-(speed-1)
     xvec = y(1,k);
     yvec = y(2,k);
@@ -126,6 +126,15 @@ for k = 1:speed:length(y)-(speed-1)
     addpoints(moon_writer,lunarx,lunary,lunarz)
     addpoints(soi_writer,soix,soiy,soiz)
     drawnow
+
+    frame = getframe(1);
+    im = frame2im(frame);
+    [imind,cm] = rgb2ind(im,256);
+    if k==1
+        imwrite(imind,cm,'EarthCenter.gif','gif','Loopcount',inf);
+    else
+        imwrite(imind,cm,'EarthCenter.gif','gif','DelayTime',0,'WriteMode','append');
+    end
 end
 
 hold off
