@@ -12,12 +12,14 @@ function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions,lunar_initP
     lunar_vel(:,1) = cross(lunar_w,lunar_initPos')';
 
 
-    orb         = zeros(6,100000);
-    orb(:,1)    = y0;
+    pos         = zeros(3,100000);
+    vel         = zeros(3,100000);
+    pos(:,1)    = y0(1:3);
+    vel(:,1)    = y0(4:6);
     lp          = lunar_pos(:,1);
-    r1e         = orb(1:3,1);
+    r1e         = pos(:,1);
     r1l         = r1e-lp;
-    v1          = orb(4:6,1);
+    v1          = vel(:,1);
 
     while true
         
@@ -63,7 +65,8 @@ function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions,lunar_initP
         r1e = (2*r2e + 4*r3e + (2*v3 + v4)*dt)/6;
         r1l = r1e - lp;
         v1 = (2*v2 + 4*v3 + (2*a3 + a4)*dt)/6;
-        orb(:,i) = [r1e;v1];
+        pos(:,i) = r1e;
+        vel(:,i) = v1;
         % y(:,i) = [kk ; 2*v2 + 4*v3 + (2*a3 + a4)*dt]/6;
         % y(:,i) = y(:,i-1) + [v1+2*v2+2*v3+v4;a1+2*a2+2*a3+a4]*dt/6;
         % y(:,i) = y(:,i-1) + (k1+2*k2+2*k3+k4)/6;
@@ -82,7 +85,7 @@ function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions,lunar_initP
 
         if mode == "LOI"
             if distance > pre_distance
-                LOI_orb.orb = orb(:,1:i-1);
+                LOI_orb.orb  =  [pos(:,1:i-1);vel(:,1:i-1)];
                 Lunar_orb.pos = lunar_pos(:,1:i-1);
                 Lunar_orb.vel = lunar_vel(:,1:i-1);
                 LOI_orb.T = (i-2)*dt;
@@ -90,7 +93,7 @@ function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions,lunar_initP
             end
         elseif mode=="draft"
             if i > 24*3600*0.5
-                LOI_orb.orb = orb(:,1:i-1);
+                LOI_orb.orb  =  [pos(:,1:i-1);vel(:,1:i-1)];
                 Lunar_orb.pos = lunar_pos(:,1:i-1);
                 Lunar_orb.vel = lunar_vel(:,1:i-1);
                 LOI_orb.T = (i-2)*dt;

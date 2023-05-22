@@ -1,7 +1,7 @@
 clear
 
 format long
-addpath("utillity\")
+addpath("utillity/")
 % Constants
 
 R_earth         =   6378;
