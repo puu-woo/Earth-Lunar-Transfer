@@ -23,21 +23,11 @@ Rmission        =   100;
 % r0 rotation
 theta_init           =   13 * pi / 180;
 
+[r0 , v0,...
+ y_trans , y_loi ,...
+ T_trans , T_loi ,...
+ lunar_position_inj , lunar_velocity_inj] = Earth2MissionOrb(mu_earth, altitude + R_earth , theta_init,lunar_posATinj, lunar_SOI, Rmission+R_lunar, dt);
 
-% Earth Parking Orbit
-[r0,v0]         = EparkOrb ( mu_earth , altitude + R_earth , theta_init );
-
-
-% Earth-Lunar Transfer Orbit
-v_init              =   [ 0 , -10.6 , 0 ];
-[y_trans,T_trans]   =   TransOrb( r0 , v_init , lunar_posATinj' , lunar_SOI , dt );
-
-
-% Lunar Orbit Injection
-% theta       =   getAngleFromPoint( lunar_posATinj , y_trans ( 1:3 , end )' );
-% v           =   [0,1,0];
-% v_init2     =   [ v * cos( theta + 0.5*pi ) , v * sin(theta+0.5*pi) , 0 ];
-[y_loi,T_inj,lunar_position_inj,lunar_velocity_inj] = LOIOrb(y_trans(1:3,end)',y_trans(4:6,end)',lunar_posATinj',dt);
 
 
 % Orbit Summation

@@ -70,7 +70,7 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
         % Minimize distance algorithm
         pre_distance = distance;
 
-        vectorfromLunar = lunar_posATinj-r1e;
+        vectorfromLunar = lunar_position(:,i)-r1e;
         % vectorfromLunar = lunar_position(:,i)-y(1:3,i);
         distance = sqrt(vectorfromLunar' * vectorfromLunar);
         
@@ -78,7 +78,14 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
             min_distance = distance;
         end
 
-%         if distance > 100
+        % if distance > pre_distance
+        %     y = y(:,1:i-1);
+        %     lunar_position = lunar_position(:,1:i-1);
+        %     lunar_velocity = lunar_velocity(:,1:i-1);
+        %     T = (i-2)*dt;
+        %     break
+        % end
+
         if i > 24*3600*0.5
             y = y(:,1:i-1);
             lunar_position = lunar_position(:,1:i-1);
