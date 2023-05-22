@@ -1,6 +1,7 @@
 clear
 
 format long
+addpath("utillity\")
 % Constants
 
 R_earth         =   6378;
@@ -21,6 +22,7 @@ Rmission        =   100;
 
 % r0 rotation
 theta_init           =   13.412 * pi / 180;
+
 
 % Condition Struct
 Earth_conditions = struct("mu",   mu_earth, ...
@@ -43,9 +45,11 @@ IConditions       = struct("Earth",Earth_conditions, ...
 % solve Transfer & LOI orbit
 [E_orb, Trans_orb ,LOI_orb, Lunar_orb] = Earth_LOI_Orb(IConditions);
 
+% Mission Orbit
+[M_orb, Lunar_orb.ex] = Mission_Orb(LOI_orb.orb(:,end),Lunar_orb.inj,IConditions);
 
 
 % Orbit Summation
-result.orb           =   [Trans_orb.orb , LOI_orb.orb];
+result.orb           =   [Trans_orb.orb , LOI_orb.orb, M_orb.orb];
 
-viewer;
+% viewer;

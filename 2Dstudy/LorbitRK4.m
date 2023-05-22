@@ -1,16 +1,15 @@
-function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions)
+function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions,lunar_initPos,mode)
 
     mu_earth        =   IConditions.Earth.mu;
     mu_lunar        =   IConditions.Lunar.mu;
-    lunar_posATinj  =   IConditions.Lunar.posATinj';
     dt              =   IConditions.dt;
     lunar_w         =   [0,0,2*pi / (27*24*3600)];
 
     i = 2;
-    distance       = norm(lunar_posATinj);
+    distance       = norm(lunar_initPos);
     min_distance   = distance;
-    lunar_pos(:,1) = lunar_posATinj;
-    lunar_vel(:,1) = cross(lunar_w,lunar_posATinj')';
+    lunar_pos(:,1) = lunar_initPos;
+    lunar_vel(:,1) = cross(lunar_w,lunar_initPos')';
 
 
     orb         = zeros(6,100000);
@@ -81,20 +80,22 @@ function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions)
             min_distance = distance;
         end
 
-        % if distance > pre_distance
-        %     y = y(:,1:i-1);
-        %     lunar_position = lunar_position(:,1:i-1);
-        %     lunar_velocity = lunar_velocity(:,1:i-1);
-        %     T = (i-2)*dt;
-        %     break
-        % end
-
-        if i > 24*3600*0.5
-            LOI_orb.orb = orb(:,1:i-1);
-            Lunar_orb.pos = lunar_pos(:,1:i-1);
-            Lunar_orb.vel = lunar_vel(:,1:i-1);
-            LOI_orb.T = (i-2)*dt;
-            break;
+        if mode == "LOI"
+            if distance > pre_distance
+                LOI_orb.orb = orb(:,1:i-1);
+                Lunar_orb.pos = lunar_pos(:,1:i-1);
+                Lunar_orb.vel = lunar_vel(:,1:i-1);
+                LOI_orb.T = (i-2)*dt;
+                break;
+            end
+        elseif mode=="draft"
+            if i > 24*3600*0.5
+                LOI_orb.orb = orb(:,1:i-1);
+                Lunar_orb.pos = lunar_pos(:,1:i-1);
+                Lunar_orb.vel = lunar_vel(:,1:i-1);
+                LOI_orb.T = (i-2)*dt;
+                break;
+            end
         end
         i = i+1;
         

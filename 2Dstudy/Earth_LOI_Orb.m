@@ -15,7 +15,7 @@ v_init                =   [ 0 , -10.6 , 0 ];
 
 
 % 
-tor          = 1; % tolerance
+tor          = 0.1; % tolerance
 addtheta     = 0.01;
 pre_location = 'OutTarget';
 

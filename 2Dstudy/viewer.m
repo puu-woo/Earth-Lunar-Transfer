@@ -9,15 +9,14 @@ ye_mission = (Rmission+R_lunar)*sin(theta)+lunar_posATinj(2);
 xl_mission = (Rmission+R_lunar)*cos(theta);
 yl_mission = (Rmission+R_lunar)*sin(theta);
 
+theta_init = IConditions.Earth.theta;
 
 % All lunar position
-lunar_position = [Lunar_orb.trans.pos(:,1:end-1),Lunar_orb.inj.pos];
-% lunar_velocity2 = [lunar_velocity(:,1:end-1),lunar_velocity_inj];
+lunar_position = [Lunar_orb.trans.pos(:,1:end-1),Lunar_orb.inj.pos,Lunar_orb.ex.pos];
 
 
 % Relative
 relative_position = result.orb(1:3,:)-lunar_position;
-% relative_velocity = y(4:6,:)-lunar_velocity2;
 relative_earthPosition = -lunar_position;
 
 % Figure
@@ -34,8 +33,6 @@ plot(0,0,'Marker','o','Color','y')
 plot(lunar_SOI*cos(theta),lunar_SOI*sin(theta),'--','Color','w')
 hold off
 legend([p1,p2,p3],'Trajectory','Lunar SOI','Earth Orb','Color',[0.2,0.2,0.2],'TextColor','w')
-% xlim([-2,2]*10^4);
-% ylim([-2,2]*10^4);
 xlabel('km');
 ylabel('km');
 title(['Lunar Center','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
@@ -82,7 +79,6 @@ p_soi = plot(x_soi,y_soi,'--','Color','w');
 plot(xe_mission,ye_mission,'--','Color','w')
 delv1 = quiver3(Trans_orb.orb(1,1),Trans_orb.orb(2,1),Trans_orb.orb(3,1),(Trans_orb.orb(4,1)-E_orb.v0(1)),(Trans_orb.orb(5,1)-E_orb.v0(2)),(Trans_orb.orb(6,1)-E_orb.v0(3)),2e4,'Color',[1,0.4,0.4]);
 delv2 = quiver3(LOI_orb.orb(1,1),LOI_orb.orb(2,1),LOI_orb.orb(3,1),(LOI_orb.orb(4,1)-Trans_orb.orb(4,end)),(LOI_orb.orb(5,1)-Trans_orb.orb(5,end)),(LOI_orb.orb(6,1)-Trans_orb.orb(6,end)),2e4','Color',[1,0.5,0.5]);
-% text(x_soi(1),y_soi(1),{' Lunar',' SOI'},'color','White')
 text (0,-150000,{'\rightarrow : del v'},'color',[1,0.5,0.5])
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 legend([p_y,p_l,p_soi],'Trajectory','Lunar Orb','Lunar SOI','Color',[0.2,0.2,0.2],'TextColor','w')
