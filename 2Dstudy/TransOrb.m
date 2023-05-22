@@ -41,12 +41,17 @@ while true
 end % end while
 
 
-% Tricky Lunar position at transfer time
+% Tricky Lunar position at transfer time\
+lunar_w = IConditions.Lunar.w;
+dt = IConditions.dt;
 l = length(Trans_orb.orb);
-Lunar_orb_trans.pos(:,l+1) = IConditions.Lunar.posATinj;
-Lunar_orb_trans.vel(:,l+1) = cross(IConditions.Lunar.w,IConditions.Lunar.posATinj);
+lunar_pos_trans(:,l+1) = IConditions.Lunar.posATinj;
+lunar_vel_trans(:,l+1) = cross(IConditions.Lunar.w,IConditions.Lunar.posATinj);
 
 for i = 1:l
-    Lunar_orb_trans.pos(:,l+1-i) = Lunar_orb_trans.pos(:,l+2-i) - Lunar_orb_trans.vel(:,l+2-i)*IConditions.dt';
-    Lunar_orb_trans.vel(:,l+1-i) = cross(IConditions.Lunar.w,Lunar_orb_trans.pos(:,l+2-i))';
+    lunar_pos_trans(:,l+1-i) = lunar_pos_trans(:,l+2-i) - lunar_vel_trans(:,l+2-i)*dt';
+    lunar_vel_trans(:,l+1-i) = cross(lunar_w,lunar_pos_trans(:,l+2-i))';
 end
+
+Lunar_orb_trans.pos = lunar_pos_trans;
+Lunar_orb_trans.vel = lunar_vel_trans;
