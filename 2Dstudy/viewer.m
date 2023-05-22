@@ -14,10 +14,10 @@ theta_init = IConditions.Earth.theta;
 % All lunar position
 lunar_position = [Lunar_orb.trans.pos(:,1:end-1),Lunar_orb.inj.pos,Lunar_orb.ex.pos];
 
-result.delv1          =   norm(Trans_orb.orb(4:6,1)-E_orb.v0');
-result.delv2          =   norm(LOI_orb.orb(4:6,1) - Trans_orb.orb(4:6,end));
-result.delv3          =   norm(M_orb.orb(4:6,1)   - LOI_orb.orb(4:6,end));
-
+result.delv1          =   Trans_orb.orb(4:6,1)-E_orb.v0';
+result.delv2          =   LOI_orb.orb(4:6,1) - Trans_orb.orb(4:6,end);
+result.delv3          =   M_orb.orb(4:6,1)   - LOI_orb.orb(4:6,end);
+result.delvs          =   [norm(result.delv1),norm(result.delv2),norm(result.delv3)];
 
 % Relative
 relative_position = result.orb(1:3,:)-lunar_position;
@@ -53,13 +53,17 @@ xlabel('TOF (day)');ylabel('km');ylim([-10000,max(dn)]);
 title(['Distance From Lunar','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='w');
 grid on
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
+
+
 % Sub Plot 4
 subplot(2,2,4);
 p11 = plot(relative_position(1,:),relative_position(2,:),'Color','White');
 hold on
 p22 = plot(xl_mission,yl_mission,'--','Color','w');
 p33 = plot(0,0,'Marker','o','Color','y');
+quiver3(M_orb.orb(1,1)-Lunar_orb.ex.pos(1,1),M_orb.orb(2,1)-Lunar_orb.ex.pos(2,1),M_orb.orb(3,1)--Lunar_orb.ex.pos(3,1),result.delv3(1),result.delv3(2),result.delv3(3),3e3','Color',[1,0.5,0.5],'LineWidth',1);
 plot(lunar_SOI*cos(theta),lunar_SOI*sin(theta),'--','Color','w')
+text (-3000,-4000,{'\rightarrow : del v'},'color',[1,0.5,0.5])
 hold off
 legend([p11,p22,p33],'Trajectory','Mission Orb','Moon','Color',[0.2,0.2,0.2],'TextColor','w')
 xlim([-1,1]*10^4);
@@ -80,9 +84,10 @@ p_l = plot(lunar_position(1,:),lunar_position(2,:));
 plot(lunar_posATinj(1),lunar_posATinj(2),'Marker','O','Color','Y')
 p_soi = plot(x_soi,y_soi,'--','Color','w');
 plot(xe_mission,ye_mission,'--','Color','w')
-delv1 = quiver3(Trans_orb.orb(1,1),Trans_orb.orb(2,1),Trans_orb.orb(3,1),(Trans_orb.orb(4,1)-E_orb.v0(1)),(Trans_orb.orb(5,1)-E_orb.v0(2)),(Trans_orb.orb(6,1)-E_orb.v0(3)),2e4,'Color',[1,0.4,0.4]);
-delv2 = quiver3(LOI_orb.orb(1,1),LOI_orb.orb(2,1),LOI_orb.orb(3,1),(LOI_orb.orb(4,1)-Trans_orb.orb(4,end)),(LOI_orb.orb(5,1)-Trans_orb.orb(5,end)),(LOI_orb.orb(6,1)-Trans_orb.orb(6,end)),2e4','Color',[1,0.5,0.5]);
-text (0,-150000,{'\rightarrow : del v'},'color',[1,0.5,0.5])
+delv1 = quiver3(Trans_orb.orb(1,1),Trans_orb.orb(2,1),Trans_orb.orb(3,1),result.delv1(1),result.delv1(2),result.delv1(3),5e4,'Color',[1,0.4,0.4]);
+delv2 = quiver3(LOI_orb.orb(1,1),LOI_orb.orb(2,1),LOI_orb.orb(3,1),result.delv2(1),result.delv2(2),result.delv2(3),2e4','Color',[1,0.5,0.5]);
+delv3 = quiver3(M_orb.orb(1,1),M_orb.orb(2,1),M_orb.orb(3,1),result.delv3(1),result.delv3(2),result.delv3(3),5e4','Color',[1,0.5,0.5],'LineWidth',1);
+text (100000,-170000,{'\rightarrow : del v'},'color',[1,0.5,0.5])
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 legend([p_y,p_l,p_soi],'Trajectory','Lunar Orb','Lunar SOI','Color',[0.2,0.2,0.2],'TextColor','w')
 grid on
