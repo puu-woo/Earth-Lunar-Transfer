@@ -21,7 +21,7 @@ lunar_SOI       =   66000;
 Rmission        =   100;
 
 % r0 rotation
-theta_init           =   13.412 * pi / 180;
+theta_init           =   -13.412 * pi / 180;
 
 
 % Condition Struct
@@ -51,5 +51,4 @@ IConditions       = struct("Earth",Earth_conditions, ...
 
 % Orbit Summation
 result.orb           =   [Trans_orb.orb , LOI_orb.orb, M_orb.orb];
-
-% viewer;
+viewer;

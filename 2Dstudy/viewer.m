@@ -14,6 +14,10 @@ theta_init = IConditions.Earth.theta;
 % All lunar position
 lunar_position = [Lunar_orb.trans.pos(:,1:end-1),Lunar_orb.inj.pos,Lunar_orb.ex.pos];
 
+result.delv1          =   norm(Trans_orb.orb(4:6,1)-E_orb.v0');
+result.delv2          =   norm(LOI_orb.orb(4:6,1) - Trans_orb.orb(4:6,end));
+result.delv3          =   norm(M_orb.orb(4:6,1)   - LOI_orb.orb(4:6,end));
+
 
 % Relative
 relative_position = result.orb(1:3,:)-lunar_position;
@@ -49,7 +53,6 @@ xlabel('TOF (day)');ylabel('km');ylim([-10000,max(dn)]);
 title(['Distance From Lunar','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='w');
 grid on
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
-
 % Sub Plot 4
 subplot(2,2,4);
 p11 = plot(relative_position(1,:),relative_position(2,:),'Color','White');
@@ -88,7 +91,6 @@ grid on
 title(['Earth Center','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
 xlim([-1,6]*10^5);xlabel('km');
 ylim([-4,5]*10^5);ylabel('km');
-
 shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceColor','r','MaximumNumPoints',1,'HandleVisibility','off');
 moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1,'HandleVisibility','off');
 soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100,'HandleVisibility','off');

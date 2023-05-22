@@ -1,24 +1,25 @@
-function [Trans_orb,Lunar_orb_trans] = TransOrb(r0,v_init,IConditions)
+function [Trans_orb,Lunar_orb_trans] = TransOrb(r0,vn_init,IConditions)
 
 
 % Solve First Time
+v_init = [ vn_init*sin(IConditions.Earth.theta) , vn_init*cos(IConditions.Earth.theta) , 0 ];
 [Trans_orb,min_distance] = EorbitRK4 ([ r0 , v_init ] , IConditions );
 % min_distance : minimun distance from lunar soi
 
 tor          = 0.01; % tolerance
-addv         = [0,-0.1,0];
+addv         = -0.1;
 pre_location = 'OutSOI';
 
 % Solve until min_distance from soi is lower than tolerance
 while true
     if min_distance > tor
-
         if strcmp(pre_location,'InSOI')
             addv = addv/10;
             pre_location = 'OutSOI';
         end
 
-        v_init = v_init+addv;
+        vn_init = vn_init+addv;
+        v_init = [ vn_init*sin(IConditions.Earth.theta) , vn_init*cos(IConditions.Earth.theta) , 0 ];
         % Solve First Time
         [Trans_orb,min_distance] = EorbitRK4 ([ r0 , v_init ] , IConditions );
 
@@ -29,13 +30,14 @@ while true
             pre_location = 'InSOI';
         end
 
-        v_init = v_init-addv;
+        vn_init = vn_init-addv;
+        v_init = [ vn_init*sin(IConditions.Earth.theta) , vn_init*cos(IConditions.Earth.theta) , 0 ];
         % Solve First Time
         [Trans_orb,min_distance] = EorbitRK4 ([ r0 , v_init ] , IConditions );
-        
+
     else % min_distance is lower than tor
         break;
-    
+
     end % end if
 
 end % end while
