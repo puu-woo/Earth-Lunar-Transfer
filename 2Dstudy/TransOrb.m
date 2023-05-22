@@ -1,7 +1,8 @@
-function [orb_t,T] = TransOrb(r0,v_init,lunar_posATinj,lunar_SOI,dt)
+function [Trans_orb] = TransOrb(r0,v_init,IConditions)
+
 
 % Solve First Time
-[orb_t,min_distance,T] = EorbitRK4 ( dt , [ r0 , v_init ] , lunar_posATinj , lunar_SOI );
+[Trans_orb,min_distance] = EorbitRK4 ([ r0 , v_init ] , IConditions );
 % min_distance : minimun distance from lunar soi
 
 tor          = 0.01; % tolerance
@@ -10,7 +11,6 @@ pre_location = 'OutSOI';
 
 % Solve until min_distance from soi is lower than tolerance
 while true
-
     if min_distance > tor
 
         if strcmp(pre_location,'InSOI')
@@ -19,7 +19,8 @@ while true
         end
 
         v_init = v_init+addv;
-        [orb_t,min_distance,T] = EorbitRK4(dt,[r0,v_init],lunar_posATinj,lunar_SOI);
+        % Solve First Time
+        [Trans_orb,min_distance] = EorbitRK4 ([ r0 , v_init ] , IConditions );
 
     elseif min_distance < -tor
 
@@ -29,8 +30,9 @@ while true
         end
 
         v_init = v_init-addv;
-        [orb_t,min_distance,T] = EorbitRK4(dt,[r0,v_init],lunar_posATinj,lunar_SOI);
-
+        % Solve First Time
+        [Trans_orb,min_distance] = EorbitRK4 ([ r0 , v_init ] , IConditions );
+        
     else % min_distance is lower than tor
         break;
     

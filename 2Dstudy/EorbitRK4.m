@@ -1,13 +1,16 @@
-function [y,min_distance,T] = EorbitRK4(dt,y0,lunar_posATinj,lunar_SOI)
+function [Trans_orb,min_distance] = EorbitRK4(y0,IConditions)
 
-    mu_earth                    =   398600;
-    
+    mu_earth                    =   IConditions.Earth.mu;
+    lunar_posATinj              =   IConditions.Lunar.posATinj';
+    lunar_SOI                   =   IConditions.Lunar.SOI;
+    dt = IConditions.dt;
+
     i = 2;
     distance = sqrt(lunar_posATinj' * lunar_posATinj);
     min_distance = distance;
 
-    y = zeros(6,100000);
-    y(:,1) = y0;
+    Trans_orb.orb = zeros(6,100000);
+    Trans_orb.orb(:,1) = y0;
     r1 = y0(1:3)';
     v1 = y0(4:end)';
 
@@ -39,7 +42,7 @@ function [y,min_distance,T] = EorbitRK4(dt,y0,lunar_posATinj,lunar_SOI)
         % Sum Orders
         r1 = (2*r2 + 4*r3 + (2*v3 + v4)*dt)/6;
         v1 = (2*v2 + 4*v3 + (2*a3 + a4)*dt)/6;
-        y(:,i) = [r1;v1];
+        Trans_orb.orb(:,i) = [r1;v1];
         % y(:,i) = [kk ; 2*v2 + 4*v3 + (2*a3 + a4)*dt]/6;
         % y(:,i) = y(:,i-1) + [v1+2*v2+2*v3+v4;a1+2*a2+2*a3+a4]*dt/6;
         % y(:,i) = y(:,i-1) + (k1 + 2*k2 + 2*k3 + k4) / 6;
@@ -55,8 +58,8 @@ function [y,min_distance,T] = EorbitRK4(dt,y0,lunar_posATinj,lunar_SOI)
             end
     
             if distance > pre_distance
-                y = y(:,1:i-1);
-                T = (i-2)*dt;
+                Trans_orb.orb = Trans_orb.orb(:,1:i-1);
+                Trans_orb.T = (i-2)*dt;
                 break;
             end
 

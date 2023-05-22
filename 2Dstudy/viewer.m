@@ -12,22 +12,22 @@ yl_mission = (Rmission+R_lunar)*sin(theta);
 
 % Tricky Lunar position at transfer time
 lunar_w         =   [0,0,2*pi / (27*24*3600)];
-l = length(y_trans);
-lunar_position(:,l+1) = lunar_posATinj;
-lunar_velocity(:,l+1) = cross(lunar_w,lunar_posATinj);
+l = length(Trans_orb.orb);
+Lunar_orb2.pos(:,l+1) = lunar_posATinj;
+Lunar_orb2.vel(:,l+1) = cross(lunar_w,lunar_posATinj);
 
 for i = 1:l
-    lunar_position(:,l+1-i) = lunar_position(:,l+2-i) - lunar_velocity(:,l+2-i)*dt';
-    lunar_velocity(:,l+1-i) = cross(lunar_w,lunar_position(:,l+2-i))';
+    Lunar_orb2.pos(:,l+1-i) = Lunar_orb2.pos(:,l+2-i) - Lunar_orb2.vel(:,l+2-i)*dt';
+    Lunar_orb2.vel(:,l+1-i) = cross(lunar_w,Lunar_orb2.pos(:,l+2-i))';
 end
 
 % All lunar position
-lunar_position2 = [lunar_position(:,1:end-1),lunar_position_inj];
+lunar_position2 = [Lunar_orb2.pos(:,1:end-1),Lunar_orb.pos];
 % lunar_velocity2 = [lunar_velocity(:,1:end-1),lunar_velocity_inj];
 
 
 % Relative
-relative_position = y(1:3,:)-lunar_position2;
+relative_position = result.orb(1:3,:)-lunar_position2;
 % relative_velocity = y(4:6,:)-lunar_velocity2;
 relative_earthPosition = -lunar_position2;
 
@@ -55,7 +55,7 @@ grid on
 
 % Sub Plot3
 dn = vecnorm(relative_position);
-ts = 0:dt:(length(y)-1)*(dt);
+ts = 0:dt:(length(result.orb)-1)*(dt);
 subplot(2,2,3)
 plot(ts/86400,dn,'Color','w');
 yline(R_lunar+Rmission,'--','Color','w','Label','Mission Orb');
@@ -84,15 +84,15 @@ grid on
 
 % Sub Plot 1
 subplot(2,2,1);
-p_y = plot(y(1,:),y(2,:),'Color','White');
+p_y = plot(result.orb(1,:),result.orb(2,:),'Color','White');
 hold on
 plot(0,0,'Marker','o','Color','g')
 p_l = plot(lunar_position2(1,:),lunar_position2(2,:));
 plot(lunar_posATinj(1),lunar_posATinj(2),'Marker','O','Color','Y')
 p_soi = plot(x_soi,y_soi,'--','Color','w');
 plot(xe_mission,ye_mission,'--','Color','w')
-delv1 = quiver3(y_trans(1,1),y_trans(2,1),y_trans(3,1),(y_trans(4,1)-v0(1)),(y_trans(5,1)-v0(2)),(y_trans(6,1)-v0(3)),2e4,'Color',[1,0.4,0.4]);
-delv2 = quiver3(y_loi(1,1),y_loi(2,1),y_loi(3,1),(y_loi(4,1)-y_trans(4,end)),(y_loi(5,1)-y_trans(5,end)),(y_loi(6,1)-y_trans(6,end)),2e4','Color',[1,0.5,0.5]);
+delv1 = quiver3(Trans_orb.orb(1,1),Trans_orb.orb(2,1),Trans_orb.orb(3,1),(Trans_orb.orb(4,1)-E_orb.v0(1)),(Trans_orb.orb(5,1)-E_orb.v0(2)),(Trans_orb.orb(6,1)-E_orb.v0(3)),2e4,'Color',[1,0.4,0.4]);
+delv2 = quiver3(LOI_orb.orb(1,1),LOI_orb.orb(2,1),LOI_orb.orb(3,1),(LOI_orb.orb(4,1)-Trans_orb.orb(4,end)),(LOI_orb.orb(5,1)-Trans_orb.orb(5,end)),(LOI_orb.orb(6,1)-Trans_orb.orb(6,end)),2e4','Color',[1,0.5,0.5]);
 % text(x_soi(1),y_soi(1),{' Lunar',' SOI'},'color','White')
 text (0,-150000,{'\rightarrow : del v'},'color',[1,0.5,0.5])
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
@@ -108,11 +108,11 @@ shipWriter = animatedline('Color','r','Marker',".",'MarkerSize',15,'MarkerFaceCo
 moon_writer = animatedline('Color',[1,0.4,0],'Marker',".",'MarkerSize',15,'MarkerFaceColor',[1,0.4,0],'MaximumNumPoints',1,'HandleVisibility','off');
 soi_writer = animatedline('Color','w','MaximumNumPoints',100,'LineStyle','--','MaximumNumPoints',100,'HandleVisibility','off');
 
-speed = 1000;
-for k = 1:speed:length(y)-(speed-1)
-    xvec = y(1,k);
-    yvec = y(2,k);
-    zvec = y(3,k);
+speed = 500;
+for k = 1:speed:length(result.orb)-(speed-1)
+    xvec = result.orb(1,k);
+    yvec = result.orb(2,k);
+    zvec = result.orb(3,k);
 
     lunarx = lunar_position2(1,k);
     lunary = lunar_position2(2,k);
@@ -127,14 +127,14 @@ for k = 1:speed:length(y)-(speed-1)
     addpoints(soi_writer,soix,soiy,soiz)
     drawnow
 
-    frame = getframe(1);
-    im = frame2im(frame);
-    [imind,cm] = rgb2ind(im,256);
-    if k==1
-        imwrite(imind,cm,'EarthCenter.gif','gif','Loopcount',inf);
-    else
-        imwrite(imind,cm,'EarthCenter.gif','gif','DelayTime',0,'WriteMode','append');
-    end
+%     frame = getframe(1);
+%     im = frame2im(frame);
+%     [imind,cm] = rgb2ind(im,256);
+%     if k==1
+%         imwrite(imind,cm,'EarthCenter.gif','gif','Loopcount',inf);
+%     else
+%         imwrite(imind,cm,'EarthCenter.gif','gif','DelayTime',0,'WriteMode','append');
+%     end
 end
 
 hold off

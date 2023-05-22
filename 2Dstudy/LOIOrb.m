@@ -1,6 +1,7 @@
-function [orb_loi,T,lunar_position,lunar_velocity,min_distance] = LOIOrb(r0,v_init,lunar_posATinj,dt)
+function [LOI_orb,Lunar_orb,min_distance] = LOIOrb(orb0,IConditions)
 
-[orb_loi,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,[r0,v_init],lunar_posATinj);
+
+[LOI_orb,Lunar_orb,min_distance] = LorbitRK4(orb0,IConditions);
 
 
 % tor = 0.01;

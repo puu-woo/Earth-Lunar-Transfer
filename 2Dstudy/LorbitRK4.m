@@ -1,21 +1,24 @@
-function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,lunar_posATinj)
-    mu_lunar        =   4911.3;
-    mu_earth        =   398600;
+function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions)
+
+    mu_earth        =   IConditions.Earth.mu;
+    mu_lunar        =   IConditions.Lunar.mu;
+    lunar_posATinj  =   IConditions.Lunar.posATinj';
     lunar_w         =   [0,0,2*pi / (27*24*3600)];
-    
+    dt = IConditions.dt;
+
     i = 2;
     distance = norm(lunar_posATinj);
     min_distance = distance;
-    lunar_position(:,1) = lunar_posATinj;
-    lunar_velocity(:,1) = cross(lunar_w,lunar_posATinj')';
+    Lunar_orb.pos(:,1) = lunar_posATinj;
+    Lunar_orb.vel(:,1) = cross(lunar_w,lunar_posATinj')';
 
 
-    y = zeros(6,100000);
-    y(:,1) = y0;
-    lp = lunar_position(:,1);
-    r1e = y(1:3,1);
+    LOI_orb.orb = zeros(6,100000);
+    LOI_orb.orb(:,1) = y0;
+    lp = Lunar_orb.pos(:,1);
+    r1e = LOI_orb.orb(1:3,1);
     r1l = r1e-lp;
-    v1 = y(4:6,1);
+    v1 = LOI_orb.orb(4:6,1);
 
     while true
         
@@ -51,9 +54,9 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
 
 
         % Lunar Update
-        lp = lp + lunar_velocity(:,i-1)*dt';
-        lunar_position(:,i) = lp;
-        lunar_velocity(:,i) = cross(lunar_w,lp)';
+        lp = lp + Lunar_orb.vel(:,i-1)*dt';
+        Lunar_orb.pos(:,i) = lp;
+        Lunar_orb.vel(:,i) = cross(lunar_w,lp)';
 
         % Sum Orders
         
@@ -61,7 +64,7 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
         r1e = (2*r2e + 4*r3e + (2*v3 + v4)*dt)/6;
         r1l = r1e - lp;
         v1 = (2*v2 + 4*v3 + (2*a3 + a4)*dt)/6;
-        y(:,i) = [r1e;v1];
+        LOI_orb.orb(:,i) = [r1e;v1];
         % y(:,i) = [kk ; 2*v2 + 4*v3 + (2*a3 + a4)*dt]/6;
         % y(:,i) = y(:,i-1) + [v1+2*v2+2*v3+v4;a1+2*a2+2*a3+a4]*dt/6;
         % y(:,i) = y(:,i-1) + (k1+2*k2+2*k3+k4)/6;
@@ -70,7 +73,7 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
         % Minimize distance algorithm
         pre_distance = distance;
 
-        vectorfromLunar = lunar_position(:,i)-r1e;
+        vectorfromLunar = Lunar_orb.pos(:,i)-r1e;
         % vectorfromLunar = lunar_position(:,i)-y(1:3,i);
         distance = sqrt(vectorfromLunar' * vectorfromLunar);
         
@@ -87,10 +90,10 @@ function [y,min_distance,T,lunar_position,lunar_velocity] = LorbitRK4(dt,y0,luna
         % end
 
         if i > 24*3600*0.5
-            y = y(:,1:i-1);
-            lunar_position = lunar_position(:,1:i-1);
-            lunar_velocity = lunar_velocity(:,1:i-1);
-            T = (i-2)*dt;
+            LOI_orb.orb = LOI_orb.orb(:,1:i-1);
+            Lunar_orb.pos = Lunar_orb.pos(:,1:i-1);
+            Lunar_orb.vel = Lunar_orb.vel(:,1:i-1);
+            LOI_orb.T = (i-2)*dt;
             break;
         end
         i = i+1;

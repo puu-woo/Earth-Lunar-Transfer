@@ -21,16 +21,31 @@ lunar_SOI       =   66000;
 Rmission        =   100;
 
 % r0 rotation
-theta_init           =   13 * pi / 180;
+theta_init           =   13.412 * pi / 180;
 
-[r0 , v0,...
- y_trans , y_loi ,...
- T_trans , T_loi ,...
- lunar_position_inj , lunar_velocity_inj] = Earth2MissionOrb(mu_earth, altitude + R_earth , theta_init,lunar_posATinj, lunar_SOI, Rmission+R_lunar, dt);
+% Condition Struct
+Earth_conditions = struct("mu",   mu_earth, ...
+                          "h0",   altitude+R_earth, ...
+                          "theta",theta_init);
+
+
+Lunar_conditions = struct("mu",       mu_lunar, ...
+                          "posATinj", lunar_posATinj, ...
+                          "SOI",      lunar_SOI, ...
+                          "h_mission",R_lunar+Rmission);
+
+
+IConditions       = struct("Earth",Earth_conditions, ...
+                           "Lunar",Lunar_conditions, ...
+                           "dt",   dt);
+
+
+% solve Transfer & LOI orbit
+[E_orb, Trans_orb ,LOI_orb, Lunar_orb] = Earth_LOI_Orb(IConditions);
 
 
 
 % Orbit Summation
-y           =   [y_trans , y_loi];
+result.orb           =   [Trans_orb.orb , LOI_orb.orb];
 
 viewer;
