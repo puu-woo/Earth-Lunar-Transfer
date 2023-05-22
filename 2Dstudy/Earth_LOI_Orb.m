@@ -21,7 +21,6 @@ pre_location = 'OutTarget';
 
 % Solve until min_distance from soi is lower than tolerance
 while true
-    min_distance
     if min_distance > IConditions.Lunar.h_mission+tor
         
         if strcmp(pre_location,'InTarget')
