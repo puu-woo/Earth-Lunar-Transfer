@@ -1,4 +1,4 @@
-function [Trans_orb] = TransOrb(r0,v_init,IConditions)
+function [Trans_orb,Lunar_orb_trans] = TransOrb(r0,v_init,IConditions)
 
 
 % Solve First Time
@@ -39,3 +39,14 @@ while true
     end % end if
 
 end % end while
+
+
+% Tricky Lunar position at transfer time
+l = length(Trans_orb.orb);
+Lunar_orb_trans.pos(:,l+1) = IConditions.Lunar.posATinj;
+Lunar_orb_trans.vel(:,l+1) = cross(IConditions.Lunar.w,IConditions.Lunar.posATinj);
+
+for i = 1:l
+    Lunar_orb_trans.pos(:,l+1-i) = Lunar_orb_trans.pos(:,l+2-i) - Lunar_orb_trans.vel(:,l+2-i)*IConditions.dt';
+    Lunar_orb_trans.vel(:,l+1-i) = cross(IConditions.Lunar.w,Lunar_orb_trans.pos(:,l+2-i))';
+end

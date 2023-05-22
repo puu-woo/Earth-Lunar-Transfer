@@ -10,26 +10,15 @@ xl_mission = (Rmission+R_lunar)*cos(theta);
 yl_mission = (Rmission+R_lunar)*sin(theta);
 
 
-% Tricky Lunar position at transfer time
-lunar_w         =   [0,0,2*pi / (27*24*3600)];
-l = length(Trans_orb.orb);
-Lunar_orb2.pos(:,l+1) = lunar_posATinj;
-Lunar_orb2.vel(:,l+1) = cross(lunar_w,lunar_posATinj);
-
-for i = 1:l
-    Lunar_orb2.pos(:,l+1-i) = Lunar_orb2.pos(:,l+2-i) - Lunar_orb2.vel(:,l+2-i)*dt';
-    Lunar_orb2.vel(:,l+1-i) = cross(lunar_w,Lunar_orb2.pos(:,l+2-i))';
-end
-
 % All lunar position
-lunar_position2 = [Lunar_orb2.pos(:,1:end-1),Lunar_orb.pos];
+lunar_position = [Lunar_orb.trans.pos(:,1:end-1),Lunar_orb.inj.pos];
 % lunar_velocity2 = [lunar_velocity(:,1:end-1),lunar_velocity_inj];
 
 
 % Relative
-relative_position = result.orb(1:3,:)-lunar_position2;
+relative_position = result.orb(1:3,:)-lunar_position;
 % relative_velocity = y(4:6,:)-lunar_velocity2;
-relative_earthPosition = -lunar_position2;
+relative_earthPosition = -lunar_position;
 
 % Figure
 fg          = figure("Color",[0.15,0.15,0.15]);
@@ -87,7 +76,7 @@ subplot(2,2,1);
 p_y = plot(result.orb(1,:),result.orb(2,:),'Color','White');
 hold on
 plot(0,0,'Marker','o','Color','g')
-p_l = plot(lunar_position2(1,:),lunar_position2(2,:));
+p_l = plot(lunar_position(1,:),lunar_position(2,:));
 plot(lunar_posATinj(1),lunar_posATinj(2),'Marker','O','Color','Y')
 p_soi = plot(x_soi,y_soi,'--','Color','w');
 plot(xe_mission,ye_mission,'--','Color','w')
@@ -114,13 +103,13 @@ for k = 1:speed:length(result.orb)-(speed-1)
     yvec = result.orb(2,k);
     zvec = result.orb(3,k);
 
-    lunarx = lunar_position2(1,k);
-    lunary = lunar_position2(2,k);
-    lunarz = lunar_position2(3,k);
+    lunarx = lunar_position(1,k);
+    lunary = lunar_position(2,k);
+    lunarz = lunar_position(3,k);
 
-    soix = lunar_SOI*cos(theta)+lunar_position2(1,k);
-    soiy = lunar_SOI*sin(theta)+lunar_position2(2,k);
-    soiz = 0*sin(theta)+lunar_position2(3,k);
+    soix = lunar_SOI*cos(theta)+lunar_position(1,k);
+    soiy = lunar_SOI*sin(theta)+lunar_position(2,k);
+    soiz = 0*sin(theta)+lunar_position(3,k);
 
     addpoints(shipWriter,xvec,yvec,zvec)
     addpoints(moon_writer,lunarx,lunary,lunarz)
