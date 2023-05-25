@@ -44,14 +44,19 @@ set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 grid on
 
 % Sub Plot3
+dt = IConditions.dt_rk89;
 dn = vecnorm(relative_position);
 ts = 0:dt:(length(result.orb)-1)*(dt);
 subplot(2,2,3)
+hold on
 plot(ts/86400,dn,'Color','w');
+hold off
 yline(R_lunar+Rmission,'--','Color','w','Label','Mission Orb');
-xlabel('TOF (day)');ylabel('km');ylim([-10000,max(dn)]);
+xlabel('TOF (day)');ylabel('km');
+ylim([-10000,max(dn)]);
 title(['Distance From Lunar','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='w');
 grid on
+xlim([0,Trans_orb.T/86400])
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 
 

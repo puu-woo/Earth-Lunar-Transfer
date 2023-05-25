@@ -2,7 +2,10 @@ function [LOI_orb,Lunar_orb,min_distance] = LorbitRK4(y0,IConditions,lunar_initP
 
     mu_earth        =   IConditions.Earth.mu;
     mu_lunar        =   IConditions.Lunar.mu;
-    dt              =   IConditions.dt;
+    dt              =   IConditions.dt_rk4;
+    if mode == "draft"
+        dt = IConditions.dt2;
+    end
     lunar_w         =   [0,0,2*pi / (27*24*3600)];
 
     i = 2;

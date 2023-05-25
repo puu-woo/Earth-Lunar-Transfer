@@ -8,7 +8,6 @@ R_earth         =   6378;
 R_lunar         =   1743;
 mu_earth        =   398600;
 mu_lunar        =   4911.3;
-dt              =   10;
 
 % Lunar
 lunar_distance  =   388000;
@@ -21,8 +20,8 @@ lunar_SOI       =   66000;
 Rmission        =   100;
 
 % r0 rotation
-theta_init           =   -13.412 * pi / 180;
-
+theta_init           =   -13.402 * pi / 180;
+% theta_init           =   -0.233909026352280;
 
 % Condition Struct
 Earth_conditions = struct("mu",   mu_earth, ...
@@ -39,7 +38,9 @@ Lunar_conditions = struct("mu",       mu_lunar, ...
 
 IConditions       = struct("Earth",Earth_conditions, ...
                            "Lunar",Lunar_conditions, ...
-                           "dt",   dt);
+                           "dt_rk4",   10, ...
+                           "dt2", 5,...
+                           "dt_rk89", 60);
 
 
 % solve Transfer & LOI orbit

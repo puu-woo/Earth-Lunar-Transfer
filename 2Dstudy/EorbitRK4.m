@@ -3,7 +3,7 @@ function [Trans_orb,min_distance] = EorbitRK4(y0,IConditions)
     mu_earth                    =   IConditions.Earth.mu;
     lunar_posATinj              =   IConditions.Lunar.posATinj';
     lunar_SOI                   =   IConditions.Lunar.SOI;
-    dt                          =   IConditions.dt;
+    dt                          =   IConditions.dt_rk4;
 
     i = 2;
     distance = sqrt(lunar_posATinj' * lunar_posATinj);
