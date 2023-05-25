@@ -39,7 +39,7 @@ hold off
 legend([p1,p2,p3],'Trajectory','Lunar SOI','Earth Orb','Color',[0.2,0.2,0.2],'TextColor','w')
 xlabel('km');
 ylabel('km');
-title(['Lunar Center','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
+title(['Moon Center','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 grid on
 
@@ -54,7 +54,7 @@ hold off
 yline(R_lunar+Rmission,'--','Color','w','Label','Mission Orb');
 xlabel('TOF (day)');ylabel('km');
 ylim([-10000,max(dn)]);
-title(['Distance From Lunar','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='w');
+title(['Distance From Moon','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='w');
 grid on
 xlim([0,Trans_orb.T/86400])
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
@@ -75,7 +75,7 @@ xlim([-1,1]*10^4);
 ylim([-1,1]*10^4);
 xlabel('km');
 ylabel('km');
-title(['Lunar Center, Near Lunar','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
+title(['Moon Center, Near','  (\theta=',num2str(theta_init*180/pi),'\circ)'],Color='white');
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 grid on
 
