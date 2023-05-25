@@ -44,7 +44,7 @@ IConditions       = struct("Earth",Earth_conditions, ...
 
 
 % solve Transfer & LOI orbit
-[E_orb, Trans_orb ,LOI_orb, Lunar_orb] = Earth_LOI_Orb(IConditions);
+[E_orb, Trans_orb ,LOI_orb, Lunar_orb,IConditions] = Earth_LOI_Orb(IConditions);
 
 % Mission Orbit
 [M_orb, Lunar_orb.ex] = Mission_Orb(LOI_orb.orb(:,end),Lunar_orb.inj,IConditions);
@@ -52,4 +52,4 @@ IConditions       = struct("Earth",Earth_conditions, ...
 
 % Orbit Summation
 result.orb           =   [Trans_orb.orb , LOI_orb.orb, M_orb.orb];
-viewer;
+% viewer;

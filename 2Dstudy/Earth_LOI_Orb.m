@@ -1,4 +1,4 @@
-function [E_orb,Trans_orb ,LOI_orb ,Lunar_orb] = Earth_LOI_Orb(IConditions)
+function [E_orb,Trans_orb ,LOI_orb ,Lunar_orb,IConditions] = Earth_LOI_Orb(IConditions)
 
 
 % Earth Parking Orbit
@@ -30,6 +30,7 @@ while true
 
         IConditions.Earth.theta = IConditions.Earth.theta+addtheta;
 
+
         % Earth Parking Orbit
         [E_orb.r0, E_orb.v0]  = EparkOrb ( IConditions.Earth );
         
@@ -50,6 +51,7 @@ while true
         end
 
         IConditions.Earth.theta = IConditions.Earth.theta-addtheta;
+        
 
         % Earth Parking Orbit
         [E_orb.r0, E_orb.v0]  = EparkOrb ( IConditions.Earth );
@@ -68,6 +70,5 @@ while true
 
     end % end if
 end % end while
-% 
 Lunar_orb.trans = Lunar_orb_trans;
 Lunar_orb.inj   = Lunar_orb_inj;
