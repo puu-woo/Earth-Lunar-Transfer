@@ -6,7 +6,7 @@ function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos
     lunar_SOI                   =   IConditions.Lunar.SOI;
     dt                          =   IConditions.dt_rk89;
     lunar_w                     =   IConditions.Lunar.w;
-
+    h_mission                   =   IConditions.Lunar.h_mission;
     if strcmp(mode,"draft")
        dt = IConditions.dt2_rk89; 
     end
@@ -30,6 +30,12 @@ function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos
     lp = lunar_pos(:,1);
     r1l         = r1-lp;
     
+
+    lunar_rot = norm(lunar_w)*dt;
+    dcm_lunar_rot = [cos(lunar_rot), sin(lunar_rot), 0 ;...
+                     -sin(lunar_rot), cos(lunar_rot), 0; ...
+                     0 , 0 , 1];
+
     while true
         
         % 1'st Order
@@ -93,11 +99,6 @@ function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos
         v10 = v1+(dt/820)*(1481*a1-81*a3+7104*a4-3376*a5+72*a6-5040*a7-60*a8+720*a9);
         a10 = - mu_earth / sqrt( r10' * r10 ) ^ 3 * r10 - mu_lunar / sqrt( r10l' * r10l ) ^ 3 * r10l;
 
-        lunar_rot = norm(lunar_w)*dt;
-        dcm_lunar_rot = [cos(lunar_rot), sin(lunar_rot), 0 ;...
-                         -sin(lunar_rot), cos(lunar_rot), 0; ...
-                         0 , 0 , 1];
-
         lp = dcm_lunar_rot'*lp;
         lunar_pos(:,i) = lp;
         lunar_vel(:,i) = cross(lunar_w,lp)';
@@ -118,32 +119,19 @@ function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos
         pre_distance = distance;
 
         vectorfromLunar = lp-r1;
-        distance = sqrt(vectorfromLunar' * vectorfromLunar)-IConditions.Lunar.h_mission;
+        distance = sqrt(vectorfromLunar' * vectorfromLunar)-h_mission;
 
-            if distance < min_distance
-                min_distance = distance;
-            end
-    
+        if distance < min_distance
+            min_distance = distance;
+        end
 
-            if strcmp(mode,"transfer")
-                if (i-2)*dt > 24*3600*2
-                    if distance > pre_distance
-                        Trans_orb.orb = [pos(:,1:i-1);vel(:,1:i-1)];
-                        Trans_orb.T = (i-2)*dt;
-                        Lunar_orb.orb = [lunar_pos(:,1:i-1);lunar_vel(:,1:i-1)];
-                        break;
-                    end
-                end
+        if (i-2)*dt > 24*3600*2 && distance > pre_distance
+            Trans_orb.orb = [pos(:,1:i-1);vel(:,1:i-1)];
+            Trans_orb.T = (i-2)*dt;
+            Lunar_orb.orb = [lunar_pos(:,1:i-1);lunar_vel(:,1:i-1)];
+            break;
+        end
 
-            elseif strcmp(mode,"draft")
-                if (i-2)*dt > 24*3600*2
-                   
-                    Trans_orb.orb = [pos(:,1:i-1);vel(:,1:i-1)];
-                    Trans_orb.T = (i-2)*dt;
-                    Lunar_orb.orb = [lunar_pos(:,1:i-1);lunar_vel(:,1:i-1)];
-                    break;
-                end
-            end
         i = i+1;
     end
 

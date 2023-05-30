@@ -1,7 +1,7 @@
 clear
 
 format long
-addpath("utillity\")
+addpath("..\","..\utillity\")
 % Constants
 
 R_earth         =   6378;
@@ -22,12 +22,12 @@ Rmission        =   100;
 
 % Initial Plane
 % raan                 =   0 * pi / 180;
-raan                 =   pi/2.52;
-inc                  =   70 * pi / 180;
+raan                =   pi/2.52;
+incs                 =   linspace(10,70,10) * pi / 180;
 w                    =   180 * pi / 180;
 
-
-% Condition Struct
+for i = 1:length(incs)
+inc = incs(i);
 Earth_conditions = struct("mu",   mu_earth, ...
                           "h0",   altitude+R_earth, ...
                           "raan", raan, ...
@@ -64,26 +64,37 @@ lunar_posInit                   =   [388000,0,0]';
 % Get Orbit Elements
 trans_orb.oev = rv2orb(IConditions.Earth.mu,IConditions.Earth.r0,IConditions.Earth.v0);
 mission_orb.oev = rv2orb(IConditions.Lunar.mu,mission_orb.orb(1:3,1)-Lunar_orb_mission.orb(1:3,1),mission_orb.orb(4:6,1)-Lunar_orb_mission.orb(4:6,1));
+mission_orb.oev
+oev(i,:) = mission_orb.oev
+end
 
 
-% Results
-results.IConditions = IConditions;
+% Analysis
+a = oev(:,1);
+ecc = oev(:,2);
+inc = oev(:,3) * 180/pi;
+w = oev(:,4) * 180/pi;
+raan = oev(:,5) * 180/pi;
+f = oev(:,6) * 180/pi;
 
-results.transferOrb = trans_orb.orb;
-results.missionOrb = mission_orb.orb;
-results.TOF = [trans_orb.T, mission_orb.T];
-results.totalOrb = [trans_orb.orb, mission_orb.orb];
+theta = linspace(0,2*pi,100);
 
-results.earth_gravity = mission_orb.earth_gravity;
-results.lunar_gravity = mission_orb.lunar_gravity;
+view(3)
+hold on
+for i = 1:length(a)
+    r(1,:) = a(i)*cos(theta);
+    r(2,:) = a(i)*sin(theta);
+    r(3,:) = 0*sin(theta);
 
-results.dv_vector1 = IConditions.Earth.v_init-IConditions.Earth.v0;
-results.dv_vector2 = mission_orb.orb(4:6,1)-trans_orb.orb(4:6,end);
-results.dv_norms = [norm(results.dv_vector1), norm(results.dv_vector2)];
+    DCM = DCMpq2inertial(oev(i,4),oev(i,3),oev(i,5));
+    or = DCM'*r;
+    plot3(or(1,:),or(2,:),or(3,:),"DisplayName",num2str(incs(i)*180/pi))
 
-results.lunarOrb_atTrans = Lunar_orb_trans.orb;
-results.lunarOrb_atmission = Lunar_orb_mission.orb;
-results.totalLunarOrb = [Lunar_orb_trans.orb, Lunar_orb_mission.orb];
+    grid on
 
-
-% viewer(results,0);
+    xlim([-2000,2000])
+    ylim([-2000,2000])
+    zlim([-2000,2000])
+end
+legend
+hold off

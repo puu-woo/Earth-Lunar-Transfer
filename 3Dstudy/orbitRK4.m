@@ -30,6 +30,11 @@ function [LOI_orb,Lunar_orb] = orbitRK4(y0,IConditions,lunar_initPos)
     g_earth(:,1) = a_earth;
     g_lunar(:,1) = a_lunar;
     
+    lunar_rot = norm(lunar_w)*dt;
+    dcm_lunar_rot = [cos(lunar_rot), sin(lunar_rot), 0 ;...
+                     -sin(lunar_rot), cos(lunar_rot), 0; ...
+                     0 , 0 , 1];
+    
 
     i = 2;
     while true
@@ -60,16 +65,11 @@ function [LOI_orb,Lunar_orb] = orbitRK4(y0,IConditions,lunar_initPos)
         r4e = r1e+v3*dt;
         r4l = r4e-lp;
         v4  = v1+a3*dt;
-        a4  = - mu_lunar / sqrt( r4l' * r4l )^3* r4l  - mu_earth / sqrt( r4e' * r4e )^3 * r4e;
+        a4  = - mu_lunar / sqrt( r4l' * r4l )^3 * r4l  - mu_earth / sqrt( r4e' * r4e )^3 * r4e;
         % k4 = dt*[v4;a4];
 
 
         % Lunar Update
-        lunar_rot = norm(lunar_w)*dt;
-        dcm_lunar_rot = [cos(lunar_rot), sin(lunar_rot), 0 ;...
-                         -sin(lunar_rot), cos(lunar_rot), 0; ...
-                         0 , 0 , 1];
-
         lp = dcm_lunar_rot'*lp;
         lunar_pos(:,i) = lp;
         lunar_vel(:,i) = cross(lunar_w,lp)';
@@ -79,7 +79,7 @@ function [LOI_orb,Lunar_orb] = orbitRK4(y0,IConditions,lunar_initPos)
         % 1'st Order Update
         r1e = (2*r2e + 4*r3e + (2*v3 + v4)*dt)/6;
         r1l = r1e - lp;
-        v1 = (2*v2 + 4*v3 + (2*a3 + a4)*dt)/6;
+        v1  = (2*v2 + 4*v3 + (2*a3 + a4)*dt)/6;
         a_earth     = - mu_earth / sqrt( r1e' * r1e ) ^ 3 * r1e;
         a_lunar     = - mu_lunar / sqrt( r1l' * r1l ) ^ 3 * r1l;
         a1 = a_earth + a_lunar;
