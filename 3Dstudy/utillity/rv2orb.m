@@ -1,6 +1,7 @@
-function oev = eci2orb(mu,r,v)
+function oev = rv2orb(mu,r,v)
 %% Revision history
 %   - 2023/04/05, by Dong-Min Moon
+%   - 2023/05/30, by Dong-Min Moon
 %=========================================================================
 % convert eci state vector to six classical orbital
 % elements via equinoctial elements
@@ -20,29 +21,28 @@ function oev = eci2orb(mu,r,v)
 %           (0 <= raan <= 2 pi)
 %  oev(6) = true anomaly (radians)
 %           (0 <= true anomaly <= 2 pi)
-% Orbital Mechanics with Matlab
 %==========================================================================
 
 
 % position and velocity norm
-rnorm       = sqrt( r'* r );
-vnorm       = sqrt( v'* v );
+rnorm       = sqrt( r(1)*r(1) + r(2)*r(2) + r(3)*r(3) );
+vnorm       = sqrt( v(1)*v(1) + v(2)*v(2) + v(3)*v(3) );
 rhat        = r / rnorm;
 
 
 % anguler momentum
 h           = cross(r, v);
-hnorm       = sqrt( h * h');
+hnorm       = sqrt( h(1)*h(1) + h(2)*h(2) + h(3)*h(3));
 
 
 % node vector
 n           = cross( [0,0,1] , h );
-nnorm       = sqrt( n * n');
+nnorm       = sqrt( n(1)*n(1) + n(2)*n(2) + n(3)*n(3));
 
 
 % eccentricity
 ecc         = cross(v, h) / mu - rhat;
-eccm        = sqrt( ecc * ecc');
+eccm        = sqrt( ecc(1)*ecc(1) + ecc(2)*ecc(2) + ecc(3)*ecc(3));
 
 
 % semimajor

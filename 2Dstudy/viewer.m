@@ -44,19 +44,31 @@ set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 grid on
 
 % Sub Plot3
-dt = IConditions.dt_rk89;
-dn = vecnorm(relative_position);
-ts = 0:dt:(length(result.orb)-1)*(dt);
+dt1 = IConditions.dt_rk89;
+dt2 = IConditions.dt_rk4;
+dt3 = IConditions.dt2;
+
+% Sub Plot3
 subplot(2,2,3)
+tspace1 = 0:dt1:Trans_orb.T;
+tspace2 = Trans_orb.T:dt2:Trans_orb.T+LOI_orb.T;
+tspace3 = Trans_orb.T+LOI_orb.T : dt3 : Trans_orb.T+LOI_orb.T+M_orb.T;
+
+Rel_pos1 = Trans_orb.orb(1:3,:)-Lunar_orb.trans.pos(:,end);
+Rel_pos2 = LOI_orb.orb(1:3,:)-Lunar_orb.inj.pos;
+Rel_pos3 = M_orb.orb(1:3,:)-Lunar_orb.ex.pos;
+
+plot(tspace1/86400,vecnorm(Rel_pos1),'Color','w');
 hold on
-plot(ts/86400,dn,'Color','w');
+plot(tspace2/86400,vecnorm(Rel_pos2),'Color','w');
+plot(tspace3/86400,vecnorm(Rel_pos3),'Color','w');
 hold off
+
 yline(R_lunar+Rmission,'--','Color','w','Label','Mission Orb');
 xlabel('TOF (day)');ylabel('km');
-ylim([-10000,max(dn)]);
 title(['Distance From Moon','  (\theta=',num2str(theta_init2*180/pi),'\circ)'],Color='w');
 grid on
-xlim([0,Trans_orb.T/86400])
+ylim([1800,1900])
 set(gca,'color',[0.2,0.2,0.2],'XColor',[0.8,0.8,0.8],'YColor',[0.8,0.8,0.8])
 
 

@@ -1,4 +1,4 @@
-function [Trans_orb,Lunar_orb,min_distance] = EorbitRK89(y0,IConditions,Lunar_pos_init,mode)
+function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos_init,mode)
 
     mu_earth                    =   IConditions.Earth.mu;
     mu_lunar                    =   IConditions.Lunar.mu;
@@ -18,9 +18,9 @@ function [Trans_orb,Lunar_orb,min_distance] = EorbitRK89(y0,IConditions,Lunar_po
     distance = sqrt(lunar_posATinj' * lunar_posATinj);
     min_distance = distance;
 
-    pos = zeros(3,100000);
-    vel = zeros(3,100000);
-    % orb(:,1) = y0;
+    pos = zeros(3,200000);
+    vel = zeros(3,200000);
+
     pos(:,1) = y0(1:3,1);
     vel(:,1) = y0(4:6,1);
     r1 = y0(1:3,1);
@@ -127,7 +127,6 @@ function [Trans_orb,Lunar_orb,min_distance] = EorbitRK89(y0,IConditions,Lunar_po
 
             if strcmp(mode,"transfer")
                 if (i-2)*dt > 24*3600*2
-                    
                     if distance > pre_distance
                         Trans_orb.orb = [pos(:,1:i-1);vel(:,1:i-1)];
                         Trans_orb.T = (i-2)*dt;

@@ -52,8 +52,8 @@ function [Trans_orb,min_distance] = EorbitRK89(y0,IConditions)
         a6 = - mu_earth / sqrt( r6' * r6 ) ^ 3 * r6;
 
         % 7'th Order
-        r7 = r1+(dt/4320)*(dt/4320)*(389*v1-54*v3+966*v4-824*v5+243*v6); 
-        v7 = v1+(dt/4320)*(dt/4320)*(389*a1-54*a3+966*a4-824*a5+243*a6);
+        r7 = r1+(dt/4320)*(389*v1-54*v3+966*v4-824*v5+243*v6); 
+        v7 = v1+(dt/4320)*(389*a1-54*a3+966*a4-824*a5+243*a6);
         a7 = - mu_earth / sqrt( r7' * r7 ) ^ 3 * r7;
 
         % 8'th Order
