@@ -9,6 +9,5 @@ vel_init = vel_init + lunar_PosVel(4:6);
 % [mission_orb,Lunar_orb_mission, ~] = orbitRK89([sat_PosVel(1:3); vel_init],IConditions,lunar_PosVel(1:3,end),"draft");
 [mission_orb,Lunar_orb_mission] = orbitRK4([sat_PosVel(1:3); vel_init],IConditions,lunar_PosVel(1:3));
 
-
 end
 
