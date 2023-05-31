@@ -5,12 +5,12 @@ IConditions     =   EparkOrb ( IConditions );
 r0 = IConditions.Earth.r0;
 v0 = IConditions.Earth.v_init;
 
-[Trans_orb,Lunar_orb_trans, min_distance] = orbitRK89([r0;v0],IConditions,lunar_posInit,"transfer");
+[Trans_orb,Lunar_orb_trans, min_distance] = orbitRK89([r0;v0],IConditions,lunar_posInit);
 
 
 addv = [0,0.01,0]';
 
-tor = 1;
+tor = 0.1;
 pre_state = "bigger";
 pre_min_distance = 10^6;
 
@@ -63,6 +63,6 @@ while true
     r0 = IConditions.Earth.r0;
     v0 = IConditions.Earth.v_init;
     pre_min_distance = min_distance;
-    [Trans_orb,Lunar_orb_trans, min_distance] = orbitRK89([r0;v0],IConditions,lunar_posInit,"transfer");
+    [Trans_orb,Lunar_orb_trans, min_distance] = orbitRK89([r0;v0],IConditions,lunar_posInit);
     
 end

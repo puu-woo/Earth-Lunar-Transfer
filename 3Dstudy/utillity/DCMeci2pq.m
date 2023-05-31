@@ -1,4 +1,4 @@
-function DCM = DCMpq2inertial(w,inc,raan)
+function DCM = DCMeci2pq(w,inc,raan)
 
 
 DCM_w = [ cos(w),     sin(w),     0;

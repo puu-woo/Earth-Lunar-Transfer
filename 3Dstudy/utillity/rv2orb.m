@@ -4,7 +4,6 @@ function oev = rv2orb(mu,r,v)
 %   - 2023/05/30, by Dong-Min Moon
 %=========================================================================
 % convert eci state vector to six classical orbital
-% elements via equinoctial elements
 % input
 %  mu = central body gravitational constant (km**3/sec**2)
 %  r  = eci position vector (kilometers)
@@ -32,17 +31,17 @@ rhat        = r / rnorm;
 
 % anguler momentum
 h           = cross(r, v);
-hnorm       = sqrt( h(1)*h(1) + h(2)*h(2) + h(3)*h(3));
+hnorm       = sqrt( h' * h);
 
 
 % node vector
 n           = cross( [0,0,1] , h );
-nnorm       = sqrt( n(1)*n(1) + n(2)*n(2) + n(3)*n(3));
+nnorm       = sqrt( n * n');
 
 
 % eccentricity
 ecc         = cross(v, h) / mu - rhat;
-eccm        = sqrt( ecc(1)*ecc(1) + ecc(2)*ecc(2) + ecc(3)*ecc(3));
+eccm        = sqrt( ecc' * ecc);
 
 
 % semimajor
@@ -60,6 +59,7 @@ raan        = atan2( n(2) , n(1) );
 
 % argument of perigee
 if eccm  >  0.00000001
+
     ndote   = dot( n , ecc );
     argper  = acos( ndote / ( eccm * nnorm ) );
 

@@ -1,21 +1,17 @@
-function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos_init,mode)
+function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos_init)
 
     mu_earth                    =   IConditions.Earth.mu;
     mu_lunar                    =   IConditions.Lunar.mu;
-    lunar_posATinj              =   IConditions.Lunar.posATinj';
     lunar_SOI                   =   IConditions.Lunar.SOI;
     dt                          =   IConditions.dt_rk89;
     lunar_w                     =   IConditions.Lunar.w;
     h_mission                   =   IConditions.Lunar.h_mission;
-    if strcmp(mode,"draft")
-       dt = IConditions.dt2_rk89; 
-    end
 
     lunar_pos(:,1) = Lunar_pos_init;
     lunar_vel(:,1) = cross(lunar_w,Lunar_pos_init)';
 
     i = 2;
-    distance = sqrt(lunar_posATinj' * lunar_posATinj);
+    distance = 10^6;
     min_distance = distance;
 
     pos = zeros(3,200000);

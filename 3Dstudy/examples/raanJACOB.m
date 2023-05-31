@@ -85,7 +85,7 @@ for i = 1:length(a)
     r(2,:) = a(i)*sin(theta);
     r(3,:) = 0*sin(theta);
 
-    DCM = DCMpq2inertial(oev(i,4),oev(i,3),oev(i,5));
+    DCM = DCMeci2pq(oev(i,4),oev(i,3),oev(i,5));
     or = DCM'*r;
     plot3(or(1,:),or(2,:),or(3,:),"DisplayName",num2str(raans(i)*180/pi))
 

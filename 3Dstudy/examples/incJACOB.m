@@ -65,7 +65,8 @@ lunar_posInit                   =   [388000,0,0]';
 trans_orb.oev = rv2orb(IConditions.Earth.mu,IConditions.Earth.r0,IConditions.Earth.v0);
 mission_orb.oev = rv2orb(IConditions.Lunar.mu,mission_orb.orb(1:3,1)-Lunar_orb_mission.orb(1:3,1),mission_orb.orb(4:6,1)-Lunar_orb_mission.orb(4:6,1));
 mission_orb.oev
-oev(i,:) = mission_orb.oev
+oev(i,:) = mission_orb.oev;
+
 end
 
 
@@ -86,7 +87,7 @@ for i = 1:length(a)
     r(2,:) = a(i)*sin(theta);
     r(3,:) = 0*sin(theta);
 
-    DCM = DCMpq2inertial(oev(i,4),oev(i,3),oev(i,5));
+    DCM = DCMeci2pq(oev(i,4),oev(i,3),oev(i,5));
     or = DCM'*r;
     plot3(or(1,:),or(2,:),or(3,:),"DisplayName",num2str(incs(i)*180/pi))
 
