@@ -11,7 +11,7 @@ mission_orb = results.missionOrb;
 total_orb = results.totalOrb;
 
 lunarOrb_atTrans = results.lunarOrb_atTrans;
-lunarOrb_atManeuver = results.lunarOrb_atmission;
+lunarOrb_atManeuver = results.lunarOrb_atMission;
 lunarOrb = results.totalLunarOrb;
 
 TOF_transfer = results.TOF(1);

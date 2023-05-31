@@ -66,3 +66,5 @@ while true
     [Trans_orb,Lunar_orb_trans, min_distance] = orbitRK89([r0;v0],IConditions,lunar_posInit);
     
 end
+
+Trans_orb.oev   = rv2orb(IConditions.Earth.mu , IConditions.Earth.r0 , IConditions.Earth.v0);

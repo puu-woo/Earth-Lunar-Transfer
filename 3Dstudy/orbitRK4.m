@@ -105,7 +105,7 @@ function [mission_orb,Lunar_orb] = orbitRK4(y0,IConditions,earth_initPos)
 
 
 
-        if (i-2)*dt > 24*3600*2
+        if (i-2)*dt > 24*3600*1
             Lunar_orb.orb = -[earth_pos(:,1:i-1);earth_vel(:,1:i-1)];
 
             mission_orb.orb  =  [pos(:,1:i-1)-earth_pos(:,1:i-1); vel(:,1:i-1)-earth_vel(:,1:i-1)];

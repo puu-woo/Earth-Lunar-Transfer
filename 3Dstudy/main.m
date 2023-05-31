@@ -42,7 +42,7 @@ Lunar_conditions = struct("mu",       mu_lunar, ...
 IConditions       = struct("Earth",Earth_conditions, ...
                            "Lunar",Lunar_conditions, ...
                            "dt_rk89",   60, ...
-                           "dt_rk4",3);
+                           "dt_rk4",5);
 
 
 % solve Transfer & LOI orbit
@@ -55,12 +55,6 @@ lunar_posInit                                =   [ 388000 , 0 , 0 ]';
 
 
 
-% Get Orbit Elements
-trans_orb.oev   = rv2orb(IConditions.Earth.mu , IConditions.Earth.r0 , IConditions.Earth.v0);
-mission_orb.oev = rv2orb(IConditions.Lunar.mu , mission_orb.orb(1:3,1)-Lunar_orb_mission.orb(1:3,1) , mission_orb.orb(4:6,1)-Lunar_orb_mission.orb(4:6,1));
-
-
-
 % Results
 results.IConditions = IConditions;
 
@@ -68,6 +62,9 @@ results.transferOrb   = trans_orb.orb;
 results.missionOrb    = mission_orb.orb;
 results.TOF           = [trans_orb.T,   mission_orb.T];
 results.totalOrb      = [trans_orb.orb, mission_orb.orb];
+
+results.transferOev   = trans_orb.oev;
+results.missionOev    = mission_orb.oev;
 
 results.earth_gravity = mission_orb.earth_gravity;
 results.lunar_gravity = mission_orb.lunar_gravity;
@@ -77,7 +74,7 @@ results.dv_vector2    = mission_orb.orb(4:6,1) - trans_orb.orb(4:6,end);
 results.dv_norms      = [norm(results.dv_vector1) , norm(results.dv_vector2)];
 
 results.lunarOrb_atTrans   = Lunar_orb_trans.orb;
-results.lunarOrb_atmission = Lunar_orb_mission.orb;
+results.lunarOrb_atMission = Lunar_orb_mission.orb;
 results.totalLunarOrb      = [Lunar_orb_trans.orb , Lunar_orb_mission.orb];
 
 
