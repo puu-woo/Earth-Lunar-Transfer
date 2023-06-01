@@ -105,7 +105,7 @@ legend("Location","best");
 subplot(2,3,6)
 plot(tspace2/86400,vecnorm(Rel_pos2)-IConditions.Lunar.h_mission,'Color','b','HandleVisibility','off');
 grid on
-title("offset from target")
+title("Offset from target")
 xlabel("day")
 ylabel("offset [km]")
 

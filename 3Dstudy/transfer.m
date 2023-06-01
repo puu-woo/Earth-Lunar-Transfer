@@ -1,70 +1,39 @@
 function [Trans_orb,Lunar_orb_trans,IConditions] = transfer(IConditions,lunar_posInit)
 
-IConditions     =   EparkOrb ( IConditions );
 
+IConditions     =   EparkOrb ( IConditions );
 r0 = IConditions.Earth.r0;
 v0 = IConditions.Earth.v_init;
+[~,~, min_distance1 ] = orbitRK89([r0;v0],IConditions,lunar_posInit);
 
-[Trans_orb,Lunar_orb_trans, min_distance] = orbitRK89([r0;v0],IConditions,lunar_posInit);
-
-
-addv = [0,0.01,0]';
-
-tor = 0.1;
-pre_state = "bigger";
-pre_min_distance = 10^6;
-
-while true
-    if min_distance > tor
-        if strcmp(pre_state,"smaller")
-           IConditions.Earth.vInitpq = IConditions.Earth.vInitpq + addv; 
-           addv = addv/2;
-           pre_state = "bigger";
-
-        elseif min_distance > pre_min_distance
-            IConditions.Earth.vInitpq = IConditions.Earth.vInitpq - 2*addv; 
-            addv = addv/2;
-            min_distance = 10^6;
-        elseif pre_min_distance - min_distance < tor/1000
-            disp("no Solution");
-            break;
-        end
+v_first = IConditions.Earth.vInitpq(2);
 
 
-        IConditions.Earth.vInitpq = IConditions.Earth.vInitpq + addv;
-
-    elseif min_distance < -tor
-        if strcmp(pre_state,"bigger")
-           IConditions.Earth.vInitpq = IConditions.Earth.vInitpq - addv; 
-           addv = addv/2;
-           pre_state = "smaller";
-
-        elseif min_distance < pre_min_distance
-            IConditions.Earth.vInitpq = IConditions.Earth.vInitpq + 2*addv; 
-            addv = addv/2;
-            min_distance = -10^6;
-
-        elseif min_distance - pre_min_distance < tor/1000
-            disp("no Solution");
-            break;
+IConditions.Earth.vInitpq = IConditions.Earth.vInitpq + [0,0.0001,0]';
+IConditions     =   EparkOrb ( IConditions );
+r0 = IConditions.Earth.r0;
+v0 = IConditions.Earth.v_init;
+[Trans_orb,Lunar_orb_trans, min_distance2 ] = orbitRK89([r0;v0],IConditions,lunar_posInit);
 
 
-        end
-        IConditions.Earth.vInitpq = IConditions.Earth.vInitpq - addv;
-    else
-        break;
-    end
+v_second = IConditions.Earth.vInitpq(2);
+tor = 0.01;
 
-
-
+while abs(min_distance2) > tor
+    gradiant = (min_distance2 - min_distance1) / (v_second-v_first);
+    IConditions.Earth.vInitpq = IConditions.Earth.vInitpq - [0, min_distance2 / gradiant, 0]';
     IConditions     =   EparkOrb ( IConditions );
-    
-    lunar_posInit                   =   [388000,0,0]';
     r0 = IConditions.Earth.r0;
     v0 = IConditions.Earth.v_init;
-    pre_min_distance = min_distance;
-    [Trans_orb,Lunar_orb_trans, min_distance] = orbitRK89([r0;v0],IConditions,lunar_posInit);
-    
+    min_distance1 = min_distance2;
+    [Trans_orb,Lunar_orb_trans, min_distance2 ] = orbitRK89([r0;v0],IConditions,lunar_posInit);
+
+    v_first = v_second;
+    v_second = IConditions.Earth.vInitpq(2);
 end
+
+
+
+
 
 Trans_orb.oev   = rv2orb(IConditions.Earth.mu , IConditions.Earth.r0 , IConditions.Earth.v0);

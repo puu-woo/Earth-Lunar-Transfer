@@ -122,6 +122,7 @@ function [Trans_orb,Lunar_orb,min_distance] = orbitRK89(y0,IConditions,Lunar_pos
         end
 
         if (i-2)*dt > 24*3600*2 && distance > pre_distance
+            min_distance = abs(min_distance);
             Trans_orb.orb = [pos(:,1:i-1);vel(:,1:i-1)];
             Trans_orb.T = (i-2)*dt;
             Lunar_orb.orb = [lunar_pos(:,1:i-1);lunar_vel(:,1:i-1)];
