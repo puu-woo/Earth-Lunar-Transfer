@@ -69,7 +69,8 @@ if eccm  >  0.00000001
     end
 
 else
-    argper  = 0.0;
+    ndote   = dot( n , r );
+    argper  = acos( ndote / ( rnorm * nnorm ) );
 end
 
 
@@ -82,6 +83,9 @@ if ecc(1) * r(2) - ecc(2) * r(1) < 0
     f       = 2*pi - f;
 end
 
+if eccm  < 0.00000001
+    f = 0;
+end
 
 oev(1)      = a;
 oev(2)      = eccm;

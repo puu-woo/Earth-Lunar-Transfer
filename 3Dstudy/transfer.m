@@ -9,7 +9,7 @@ v0 = IConditions.Earth.v_init;
 v_first = IConditions.Earth.vInitpq(2);
 
 
-IConditions.Earth.vInitpq = IConditions.Earth.vInitpq + [0,0.0001,0]';
+IConditions.Earth.vInitpq = IConditions.Earth.vInitpq + [0,0.01,0]';
 IConditions     =   EparkOrb ( IConditions );
 r0 = IConditions.Earth.r0;
 v0 = IConditions.Earth.v_init;
@@ -19,8 +19,9 @@ v0 = IConditions.Earth.v_init;
 v_second = IConditions.Earth.vInitpq(2);
 
 % Newton Raphson for minimize min distance
-tor = 0.1;
+tor = 0.001;
 while abs(min_distance2) > tor
+
     gradiant                    =   (min_distance2 - min_distance1) / (v_second-v_first);
     IConditions.Earth.vInitpq   =   IConditions.Earth.vInitpq - [0, min_distance2 / gradiant, 0]';
     IConditions                 =   EparkOrb ( IConditions );
@@ -33,6 +34,8 @@ while abs(min_distance2) > tor
 
     v_first = v_second;
     v_second = IConditions.Earth.vInitpq(2);
+   
+
 end
 
 
