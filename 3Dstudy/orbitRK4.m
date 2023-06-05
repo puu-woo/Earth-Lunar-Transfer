@@ -1,4 +1,4 @@
-function [mission_orb,Lunar_orb] = orbitRK4_2(y0,IConditions,earth_initPos)
+function [mission_orb,Lunar_orb] = orbitRK4(y0,IConditions,earth_initPos)
 
     mu_earth        =   IConditions.Earth.mu;
     mu_lunar        =   IConditions.Lunar.mu;
