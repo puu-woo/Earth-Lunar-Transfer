@@ -17,8 +17,13 @@ Rmission        =   100;
 
 
 % Initial Plane
+<<<<<<< HEAD
 raan                 =   pi/2.56;
 inc                  =   4 * pi / 180;
+=======
+raan                 =   70 * pi / 180;
+inc                  =   30 * pi / 180;
+>>>>>>> main
 w                    =   180 * pi / 180;
 
 
@@ -28,7 +33,9 @@ Earth_conditions = struct("mu",   mu_earth, ...
                           "raan", raan, ...
                           "inc",  inc, ...
                           "w",    w, ...
-                          "vInitpq",[0 , 10.671211547851572 , 0 ]');
+                          "vInitpq",[0 , 10.65 , 0 ]');
+
+% vInitpq must be in the  10.63 ~ 10.7 for root finding
 
 
 Lunar_conditions = struct("mu",       mu_lunar, ...
@@ -42,7 +49,7 @@ Lunar_conditions = struct("mu",       mu_lunar, ...
 IConditions       = struct("Earth",Earth_conditions, ...
                            "Lunar",Lunar_conditions, ...
                            "dt_rk89",   60, ...
-                           "dt_rk4",5);
+                           "dt_rk4",1);
 
 
 % solve Transfer & LOI orbit
@@ -78,4 +85,4 @@ results.lunarOrb_atMission = Lunar_orb_mission.orb;
 results.totalLunarOrb      = [Lunar_orb_trans.orb , Lunar_orb_mission.orb];
 
 
-viewer(results,0);
+% viewer(results,0);

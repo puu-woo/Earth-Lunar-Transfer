@@ -81,7 +81,7 @@ plot(tspace2/86400,vecnorm(Rel_pos2),'Color','b','HandleVisibility','off');
 hold off
 title("Distance From Moon")
 grid on
-ylim([1800,1900])
+ylim([1840,1850])
 xlabel("day");
 ylabel("km");
 legend();
@@ -103,7 +103,7 @@ legend("Location","best");
 % SubPlot 6
 % Offset from target
 subplot(2,3,6)
-plot(tspace2/86400,vecnorm(Rel_pos2)-IConditions.Lunar.h_mission,'Color','b','HandleVisibility','off');
+plot((tspace2-tspace2(1))/86400,vecnorm(Rel_pos2)-IConditions.Lunar.h_mission,'Color','b','HandleVisibility','off');
 grid on
 title("Offset from target")
 xlabel("day")
