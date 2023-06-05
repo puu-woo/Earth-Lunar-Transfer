@@ -9,9 +9,6 @@ for i = 1:length(v)
     v0 = IConditions.Earth.v_init;
     [~,~, min_distance(i) ] = orbitRK89([r0;v0],IConditions,lunar_posInit);
 
-
-    
-    % Newton Raphson for minimize min distance
 end
 
 
