@@ -17,7 +17,7 @@ Rmission        =   100;
 
 
 % Initial Plane
-raan                 =   pi/2.56;
+raan                 =   70 * pi / 180;
 inc                  =   30 * pi / 180;
 w                    =   180 * pi / 180;
 
@@ -28,7 +28,7 @@ Earth_conditions = struct("mu",   mu_earth, ...
                           "raan", raan, ...
                           "inc",  inc, ...
                           "w",    w, ...
-                          "vInitpq",[0 , 10.7 , 0 ]');
+                          "vInitpq",[0 , 10.6 , 0 ]');
 
 % vInitpq must be in the  10.63 ~ 10.7 for root finding
 

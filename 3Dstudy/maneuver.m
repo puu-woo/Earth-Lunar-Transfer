@@ -26,7 +26,7 @@ v0   = DCM'*v_pq;
 
 
 % [mission_orb,Lunar_orb_mission, ~] = orbitRK89([sat_PosVel(1:3); vel_init],IConditions,lunar_PosVel(1:3,end),"draft");
-[mission_orb,Lunar_orb_mission] = orbitRK4_2([re-rl; v0],IConditions,-lunar_PosVel(1:3));
+[mission_orb,Lunar_orb_mission] = orbitRK4([re-rl; v0],IConditions,-lunar_PosVel(1:3));
 mission_orb.oev = rv2orb(IConditions.Lunar.mu , re-rl , v0);
 
 end

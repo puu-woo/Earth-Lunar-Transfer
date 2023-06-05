@@ -1,4 +1,4 @@
-v = linspace(10.671,10.6734,100);
+v = linspace(10,11,100);
 
 min_distance = zeros(1,length(v));
 
@@ -8,7 +8,7 @@ for i = 1:length(v)
     r0 = IConditions.Earth.r0;
     v0 = IConditions.Earth.v_init;
     [~,~, min_distance(i) ] = orbitRK89([r0;v0],IConditions,lunar_posInit);
-    a(i) = 1 / min_distance(i);
+
 
     
     % Newton Raphson for minimize min distance
@@ -23,7 +23,7 @@ figure(2)
 bb = (min_distance(2:end) - min_distance(1:end-1)) / (0.7/100);
 bbb = (bb(2:end) - bb(1:end-1)) / (0.04/100);
 plot(v(2:end),(min_distance(2:end) - min_distance(1:end-1)) / (0.04/100))
-
-figure(3)
-plot(v(3:end), bbb)
+% 
+% figure(3)
+% plot(v(3:end), bbb)
 

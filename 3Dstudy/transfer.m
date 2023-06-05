@@ -34,7 +34,11 @@ while abs(min_distance2) > tor
 
     v_first = v_second;
     v_second = IConditions.Earth.vInitpq(2);
-   
+    if min_distance2 == 10^6
+        disp("**Numerical Error**")
+        disp("Newton Raphson Divergence. Set another Initial Velocity");
+        break;
+    end
 
 end
 
