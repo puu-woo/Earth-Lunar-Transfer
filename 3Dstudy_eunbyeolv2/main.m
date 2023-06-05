@@ -18,9 +18,9 @@ Rmission        =   100;
 
 % Initial Plane
 raan                 =   pi/2.56;
-inc                  =   4 * pi / 180;
+inc                  =   70 * pi / 180;
 w                    =   180 * pi / 180;
-
+addtheta             =   0.01 * pi / 180;
 
 % Condition Struct
 Earth_conditions = struct("mu",   mu_earth, ...
@@ -28,6 +28,7 @@ Earth_conditions = struct("mu",   mu_earth, ...
                           "raan", raan, ...
                           "inc",  inc, ...
                           "w",    w, ...
+                          'addtheta',   addtheta, ...
                           "vInitpq",[0 , 10.671211547851572 , 0 ]');
 
 
@@ -45,14 +46,18 @@ IConditions       = struct("Earth",Earth_conditions, ...
                            "dt_rk4",5);
 
 
-% solve Transfer & LOI orbit
+% % solve Transfer & LOI orbit
+% lunar_posInit                                =   [ 388000 , 0 , 0 ]';
+% [trans_orb , Lunar_orb_trans , IConditions]  =   transfer( IConditions , lunar_posInit );
+% 
+% 
+% % Mission Orb maneuver
+% [mission_orb , Lunar_orb_mission]            =   maneuver(trans_orb.orb(:,end) , Lunar_orb_trans.orb(:,end) , IConditions);
+
+
+
 lunar_posInit                                =   [ 388000 , 0 , 0 ]';
-[trans_orb , Lunar_orb_trans , IConditions]  =   transfer( IConditions , lunar_posInit );
-
-
-% Mission Orb maneuver
-[mission_orb , Lunar_orb_mission]            =   maneuver(trans_orb.orb(:,end) , Lunar_orb_trans.orb(:,end) , IConditions);
-
+[trans_orb , Lunar_orb_trans , IConditions, mission_orb , Lunar_orb_mission] = fitorb(IConditions , lunar_posInit);
 
 
 % Results
