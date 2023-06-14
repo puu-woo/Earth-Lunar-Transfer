@@ -22,9 +22,9 @@ Rmission        =   100;
 
 % Initial Plane
 % raan                 =   0 * pi / 180;
-raan                =   pi/2.52;
-incs                 =   linspace(10,70,10) * pi / 180;
-w                    =   180 * pi / 180;
+raan                =    pi/2.52;
+incs                 =   linspace(-90,90,10) * pi / 180;
+f                    =   180 * pi / 180;
 
 for i = 1:length(incs)
 inc = incs(i);
@@ -32,7 +32,7 @@ Earth_conditions = struct("mu",   mu_earth, ...
                           "h0",   altitude+R_earth, ...
                           "raan", raan, ...
                           "inc",  inc, ...
-                          "w",    w, ...
+                          "f",    f, ...
                           "vInitpq",[0 , 10.665856199999997 , 0 ]');
 
 

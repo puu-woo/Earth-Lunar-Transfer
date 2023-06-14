@@ -30,12 +30,16 @@ rhat        = r / rnorm;
 
 
 % anguler momentum
+
+
+
 h           = cross(r, v);
 hnorm       = sqrt( h' * h);
 
 
 % node vector
 n           = cross( [0,0,1] , h );
+
 nnorm       = sqrt( n * n');
 
 
@@ -49,7 +53,8 @@ a           = 1 / (2 / rnorm - vnorm * vnorm / mu);
 
 
 % inclination
-inc         = acos( h(3) / hnorm );
+
+inc         = acos( abs(h(3)) / hnorm );
 
 
 % raan
@@ -60,8 +65,12 @@ raan        = atan2( n(2) , n(1) );
 % argument of perigee
 if eccm  >  0.00000001
 
-    ndote   = dot( n , ecc );
-    argper  = acos( ndote / ( eccm * nnorm ) );
+    if nnorm ~= 0
+        ndote   = dot( n , ecc );
+        argper  = acos( ndote / ( eccm * nnorm ) );
+    else
+        argper = 0;
+    end
 
 
     if ecc(3)  <  0
