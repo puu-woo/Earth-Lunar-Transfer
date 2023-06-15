@@ -19,7 +19,8 @@ v0 = IConditions.Earth.v_init;
 v_second = IConditions.Earth.vInitpq(2);
 
 % Newton Raphson for minimize min distance
-tor = 0.001;
+tor = 0.01;
+iter = 0;
 while abs(min_distance2) > tor
 
     gradiant                    =   (min_distance2 - min_distance1) / (v_second-v_first);
@@ -34,8 +35,12 @@ while abs(min_distance2) > tor
 
     v_first = v_second;
     v_second = IConditions.Earth.vInitpq(2);
-    if min_distance2 == 10^6
-        disp("**Numerical Error**")
+
+
+    iter = iter+1;
+    if min_distance2 == 10^6 || iter > 25
+        IConditions.result = "f";
+        disp("**Numerical Error or No Solution**")
         disp("Newton Raphson Divergence. Set another Initial Velocity");
         break;
     end

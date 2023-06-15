@@ -22,7 +22,7 @@ Rmission        =   100;
 
 % Initial Plane
 % raan                 =   0 * pi / 180;
-raans                 =   linspace(pi/2.52,pi/2.9,20);
+raans                 =   linspace(pi/2.5,pi/2.8,10);
 inc                  =   70 * pi / 180;
 w                    =   180 * pi / 180;
 
