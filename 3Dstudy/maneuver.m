@@ -10,7 +10,7 @@ vn = sqrt(IConditions.Lunar.mu / norm( re - rl ));
 
 
 rel_v = (ve-vl) / norm (ve-vl) * vn;
-oev = rv2orb(IConditions.Lunar.mu , re-rl , rel_v);
+oev = rv2orb(IConditions.Lunar.mu , re-rl , rel_v)
 
 if oev(3) > 0.5*pi
     vn = - vn;
