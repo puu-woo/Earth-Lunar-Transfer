@@ -54,7 +54,7 @@ a           = 1 / (2 / rnorm - vnorm * vnorm / mu);
 
 % inclination
 
-inc         = acos( abs(h(3)) / hnorm );
+inc         = acos( h(3) / hnorm );
 
 
 % raan

@@ -22,7 +22,7 @@ v_second = IConditions.Earth.vInitpq(2);
 tor = 0.01;
 iter = 0;
 while abs(min_distance2) > tor
-
+    min_distance2
     gradiant                    =   (min_distance2 - min_distance1) / (v_second-v_first);
     IConditions.Earth.vInitpq   =   IConditions.Earth.vInitpq - [0, min_distance2 / gradiant, 0]';
     IConditions                 =   EparkOrb ( IConditions );
@@ -38,7 +38,7 @@ while abs(min_distance2) > tor
 
 
     iter = iter+1;
-    if min_distance2 == 10^6 || iter > 25
+    if min_distance2 == 10^6 || iter > 50
         IConditions.result = "f";
         disp("**Numerical Error or No Solution**")
         disp("Newton Raphson Divergence. Set another Initial Velocity");
